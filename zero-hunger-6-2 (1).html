@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zero Hunger — Food Sharing Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#0b3d2b; --green-800:#0d4a34; --green-700:#0f5c40;
+  --green-600:#128a4f; --green-500:#16a34a; --green-400:#22c55e;
+  --green-100:#e7f6ec; --green-50:#f2faf4;
+  --bg:#f4f8f5; --card:#ffffff; --text:#143527; --muted:#5f7a6d;
+  --border:#e2ece6; --shadow:0 4px 18px rgba(11,61,43,.08);
+  --shadow-lg:0 18px 48px rgba(11,61,43,.18);
+  --sidebar-bg:linear-gradient(180deg,#0c422e 0%,#0b3d2b 60%,#093325 100%);
+  --topbar:#ffffff; --input:#f6faf7; --hover:#eef6f0;
+  --radius:16px; --font-h:'Poppins',sans-serif; --font-b:'Inter',sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0b1511; --card:#11221a; --text:#e4f2ea; --muted:#92aa9d;
+  --border:#1d3529; --shadow:0 4px 18px rgba(0,0,0,.35);
+  --shadow-lg:0 18px 48px rgba(0,0,0,.5);
+  --topbar:#11221a; --input:#0d1c15; --hover:#16291f;
+  --sidebar-bg:linear-gradient(180deg,#0a2e20 0%,#08251a 60%,#061d14 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);font-size:14.5px;line-height:1.55;transition:background .3s,color .3s}
+h1,h2,h3,h4{font-family:var(--font-h);color:var(--text)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--text);background:var(--input);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;width:100%;outline:none;transition:border .2s, box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+label{display:block;font-weight:600;font-size:12.5px;margin-bottom:6px;color:var(--text)}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#b9cec4;border-radius:8px}::-webkit-scrollbar-track{background:transparent}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;font-weight:600;font-size:14px;border-radius:12px;padding:11px 20px;transition:.2s;border:1.5px solid transparent}
+.btn-primary{background:linear-gradient(135deg,var(--green-600),var(--green-500));color:#fff;box-shadow:0 6px 16px rgba(22,163,74,.28)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(22,163,74,.36)}
+.btn-outline{background:var(--card);border-color:var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--green-500);color:var(--green-600)}
+.btn-ghost{background:transparent;color:var(--muted)}
+.btn-ghost:hover{background:var(--hover);color:var(--text)}
+.btn-danger-soft{background:#fdecec;color:#c0392b}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:10px}
+.btn-block{width:100%}
+
+/* ============ AUTH ============ */
+#authView{min-height:100vh;display:grid;grid-template-columns:1.05fr 1fr}
+.auth-left{background:var(--sidebar-bg);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:56px;position:relative;overflow:hidden}
+.auth-left .leaf{position:absolute;opacity:.14}
+.auth-brand{display:flex;align-items:center;gap:14px;margin-bottom:38px}
+.logo-badge{width:52px;height:52px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-badge svg{width:30px;height:30px}
+.auth-brand h1{color:#fff;font-size:24px;line-height:1.15}
+.auth-brand span{font-size:12.5px;opacity:.85;font-family:var(--font-b)}
+.auth-left h2{color:#fff;font-size:clamp(26px,3vw,38px);line-height:1.2;margin-bottom:16px}
+.auth-left p.lead{opacity:.88;max-width:460px;margin-bottom:30px}
+.auth-points{display:flex;flex-direction:column;gap:14px}
+.auth-points div{display:flex;gap:12px;align-items:center;font-weight:500}
+.auth-points .dot{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.auth-right{display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.auth-card{width:100%;max-width:470px;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:34px;box-shadow:var(--shadow)}
+.auth-card h3{font-size:21px;margin-bottom:4px}
+.auth-card .sub{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.type-card{border:1.5px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;background:var(--input)}
+.type-card svg{width:26px;height:26px;margin-bottom:6px}
+.type-card p{font-weight:600;font-size:12.5px}
+.type-card.active{border-color:var(--green-500);background:var(--green-100);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+[data-theme="dark"] .type-card.active{background:#143526}
+.auth-tabs{display:flex;background:var(--input);border-radius:12px;padding:4px;margin-bottom:20px}
+.auth-tabs button{flex:1;padding:9px;border-radius:9px;font-weight:600;color:var(--muted);transition:.2s}
+.auth-tabs button.active{background:var(--card);color:var(--green-600);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.field{margin-bottom:14px;position:relative}
+.field .ficon{position:absolute;left:13px;bottom:12px;color:var(--muted);pointer-events:none}
+.field.has-icon input{padding-left:40px}
+.auth-foot{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.auth-foot a{color:var(--green-600);font-weight:600;cursor:pointer}
+@media(max-width:900px){#authView{grid-template-columns:1fr}.auth-left{display:none}}
+
+/* ============ APP LAYOUT ============ */
+#appView{display:none;min-height:100vh}
+#appView.on{display:block}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:264px;background:var(--sidebar-bg);color:#eaf5ee;display:flex;flex-direction:column;z-index:60;transition:transform .3s}
+.sb-brand{display:flex;align-items:center;gap:12px;padding:22px 20px 18px}
+.sb-brand h1{color:#fff;font-size:19px;line-height:1.15}
+.sb-brand span{font-size:11.5px;opacity:.8;font-family:var(--font-b)}
+.sb-menu{flex:1;overflow-y:auto;padding:6px 14px 14px}
+.sb-label{font-size:10.5px;letter-spacing:1.6px;opacity:.55;font-weight:700;margin:16px 10px 8px}
+.sb-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:12px;color:#d7e9dd;font-weight:500;font-size:14px;margin-bottom:4px;transition:.2s;text-align:left}
+.sb-item svg{width:20px;height:20px;flex-shrink:0}
+.sb-item:hover{background:rgba(255,255,255,.09);color:#fff}
+.sb-item.active{background:linear-gradient(90deg,rgba(34,197,94,.95),rgba(22,163,74,.75));color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.22)}
+.sb-badge{margin-left:auto;background:var(--green-400);color:#06301c;font-size:11px;font-weight:700;border-radius:20px;padding:1px 8px}
+.sb-promo{margin:14px;background:linear-gradient(135deg,#17a24b,#0f7a3a);border-radius:16px;padding:16px;position:relative;overflow:hidden}
+.sb-promo h4{color:#fff;font-size:14.5px;margin-bottom:4px}
+.sb-promo p{color:#d9f5e2;font-size:11.5px}
+.main{margin-left:264px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:50;background:var(--topbar);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:12px 26px;transition:background .3s}
+.hamburger{width:42px;height:42px;border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--card);flex-shrink:0}
+.search-wrap{flex:1;max-width:560px;position:relative}
+.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search-wrap input{padding-left:42px;border-radius:30px;background:var(--input)}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;position:relative;transition:.2s;color:var(--text)}
+.icon-btn:hover{border-color:var(--green-500);color:var(--green-600)}
+.bell-dot{position:absolute;top:-5px;right:-5px;background:#e11d48;color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--topbar)}
+.profile-chip{display:flex;align-items:center;gap:10px;padding:5px 10px 5px 5px;border:1px solid var(--border);border-radius:30px;background:var(--card);cursor:pointer}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green-500),var(--green-700));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;overflow:hidden;flex-shrink:0}
+.profile-chip .pname{font-weight:600;font-size:13.5px;line-height:1.15}
+.profile-chip .ptype{font-size:11px;color:var(--muted)}
+.dropdown{position:absolute;top:56px;right:26px;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);min-width:210px;padding:8px;z-index:80;display:none}
+.dropdown.open{display:block}
+.dropdown button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;font-weight:500;font-size:13.5px;text-align:left}
+.dropdown button:hover{background:var(--hover)}
+.page{padding:26px;max-width:1460px;width:100%;margin:0 auto;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-head h2{font-size:26px;display:flex;align-items:center;gap:12px}
+.page-head h2 svg{color:var(--green-600)}
+.page-head .sub{color:var(--muted);margin-top:4px;font-size:14px}
+.overlay{position:fixed;inset:0;background:rgba(6,26,17,.5);z-index:55;opacity:0;pointer-events:none;transition:.3s}
+.overlay.on{opacity:1;pointer-events:auto}
+
+/* ============ CARDS / KPI ============ */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:22px}
+.kpi{display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.kpi-top{display:flex;align-items:center;justify-content:space-between}
+.kpi-label{font-size:12.5px;color:var(--muted);font-weight:600}
+.kpi-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.kpi-icon svg{width:22px;height:22px}
+.kpi-val{font-family:var(--font-h);font-size:32px;font-weight:700;line-height:1}
+.kpi-trend{font-size:12px;font-weight:600;color:var(--green-600)}
+.tone-green{background:var(--green-100);color:var(--green-600)} [data-theme="dark"] .tone-green{background:#143526;color:var(--green-400)}
+.tone-blue{background:#e8f0fe;color:#3b6fd4} [data-theme="dark"] .tone-blue{background:#152238;color:#7ea6f0}
+.tone-purple{background:#f3e8fd;color:#8b3fd4} [data-theme="dark"] .tone-purple{background:#241735;color:#c39bf0}
+.tone-teal{background:#e6f7f4;color:#0e9488} [data-theme="dark"] .tone-teal{background:#0f2e2b;color:#5eead4}
+.tone-orange{background:#fdF0e4;color:#d97706} [data-theme="dark"] .tone-orange{background:#33240f;color:#fbbf24}
+.tone-rose{background:#fde8ec;color:#d43f5b} [data-theme="dark"] .tone-rose{background:#331520;color:#fb8fa8}
+
+.grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:22px}
+.grid-2b{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap}
+.card-head h3{font-size:16px;display:flex;align-items:center;gap:10px}
+.card-head h3 .ch-ic{width:34px;height:34px;border-radius:10px;background:var(--green-100);color:var(--green-600);display:flex;align-items:center;justify-content:center}
+[data-theme="dark"] .card-head h3 .ch-ic{background:#143526;color:var(--green-400)}
+.pill-select{padding:7px 12px;border-radius:20px;font-size:12.5px;font-weight:600;width:auto}
+
+/* charts */
+.bar-chart{display:flex;align-items:flex-end;gap:18px;height:190px;padding-top:10px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:44px;background:linear-gradient(180deg,var(--green-400),var(--green-600));border-radius:8px 8px 3px 3px;min-height:4px;transition:height .5s;position:relative}
+.bar:hover{filter:brightness(1.1)}
+.bar-val{font-size:11px;font-weight:700;color:var(--muted)}
+.bar-x{font-size:11.5px;color:var(--muted);font-weight:600}
+.chart-empty{height:190px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;border:1.5px dashed var(--border);border-radius:12px}
+.donut-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.donut{width:160px;height:160px;border-radius:50%;flex-shrink:0;position:relative}
+.donut::after{content:"";position:absolute;inset:26px;background:var(--card);border-radius:50%}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
+.donut-center b{font-family:var(--font-h);font-size:22px}
+.donut-center span{font-size:10.5px;color:var(--muted)}
+.legend{display:flex;flex-direction:column;gap:9px;flex:1;min-width:150px}
+.legend-row{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.legend-row .sw{width:12px;height:12px;border-radius:4px;flex-shrink:0}
+.legend-row b{margin-left:auto;font-family:var(--font-h)}
+.hbar-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.hbar-row .hl{width:96px;font-size:12.5px;font-weight:600;flex-shrink:0}
+.hbar-track{flex:1;height:12px;background:var(--input);border-radius:10px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:10px;transition:width .6s}
+.hbar-row b{width:30px;text-align:right;font-family:var(--font-h)}
+
+/* table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{text-align:left;padding:11px 14px;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);background:var(--input);font-weight:700;white-space:nowrap}
+thead th:first-child{border-radius:10px 0 0 10px}thead th:last-child{border-radius:0 10px 10px 0}
+tbody td{padding:13px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:hover{background:var(--hover)}
+tbody tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px}
+.b-pending{background:#fef3c7;color:#b45309}[data-theme="dark"] .b-pending{background:#33270c;color:#fbbf24}
+.b-active{background:var(--green-100);color:var(--green-700)}[data-theme="dark"] .b-active{background:#143526;color:var(--green-400)}
+.b-info{background:#e8f0fe;color:#3b6fd4}[data-theme="dark"] .b-info{background:#152238;color:#7ea6f0}
+.b-rose{background:#fde8ec;color:#d43f5b}[data-theme="dark"] .b-rose{background:#331520;color:#fb8fa8}
+.cell-main{font-weight:600}
+.cell-sub{font-size:12px;color:var(--muted)}
+
+/* empty state */
+.empty{padding:44px 20px;text-align:center;color:var(--muted)}
+.empty .eic{width:72px;height:72px;border-radius:22px;background:var(--green-100);color:var(--green-600);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+[data-theme="dark"] .empty .eic{background:#143526;color:var(--green-400)}
+.empty .eic svg{width:34px;height:34px}
+.empty h4{color:var(--text);font-size:16px;margin-bottom:5px}
+.empty p{font-size:13px;max-width:360px;margin:0 auto}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.toolbar .search-wrap{flex:1;min-width:200px;max-width:340px}
+.toolbar select{width:auto;padding:9px 34px 9px 13px;font-size:13px;border-radius:11px}
+
+/* forms */
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
+.form-grid .full{grid-column:1/-1}
+.form-grid .span2{grid-column:span 2}
+textarea{resize:vertical;min-height:84px}
+
+/* modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(6,26,17,.55);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.25s}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{background:var(--card);border-radius:20px;width:100%;max-width:760px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);transform:translateY(16px);transition:.25s}
+.modal-overlay.open .modal{transform:none}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0}
+.modal-head h3{font-size:18px}
+.modal-x{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.modal-x:hover{background:var(--hover);color:var(--text)}
+.modal-body{padding:18px 24px 24px}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:0 24px 22px}
+
+/* toast */
+#toastWrap{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--green-500);border-radius:14px;padding:13px 18px;box-shadow:var(--shadow-lg);font-weight:500;font-size:13.5px;animation:slideIn .3s;max-width:340px}
+.toast.err{border-left-color:#e11d48}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+
+/* settings */
+.set-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:16px;align-items:start}
+.profile-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:28px 20px}
+.big-avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--green-500),var(--green-800));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:34px;font-weight:700}
+.pref-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);gap:14px}
+.pref-row:last-child{border-bottom:none}
+.pref-row .pl{font-weight:600;font-size:13.5px}
+.pref-row .ps{font-size:12px;color:var(--muted)}
+.switch{position:relative;width:46px;height:26px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch .track{position:absolute;inset:0;background:#c6d6cd;border-radius:20px;transition:.25s;cursor:pointer}
+.switch .track::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+.switch input:checked + .track{background:var(--green-500)}
+.switch input:checked + .track::after{left:23px}
+
+/* notifications */
+.notif-item{display:flex;gap:14px;padding:16px;border:1px solid var(--border);border-radius:14px;margin-bottom:10px;background:var(--card);align-items:flex-start;transition:.2s}
+.notif-item:hover{box-shadow:var(--shadow)}
+.notif-item.unread{border-left:4px solid var(--green-500)}
+.notif-ic{width:42px;height:42px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.notif-item b{display:block;font-size:13.5px}
+.notif-item p{font-size:12.5px;color:var(--muted)}
+.notif-time{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+/* misc */
+.banner{background:linear-gradient(90deg,var(--green-100),#f7fcf8);border:1px solid var(--border);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:12px;color:var(--green-800);font-weight:600;font-size:13.5px;margin-bottom:20px}
+[data-theme="dark"] .banner{background:linear-gradient(90deg,#0f2b1e,#11221a);color:var(--green-400)}
+.banner svg{flex-shrink:0}
+.stat-mini{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.stat-mini .mi{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-mini b{font-family:var(--font-h);font-size:20px;display:block;line-height:1.1}
+.stat-mini span{font-size:12px;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab-btn{padding:9px 18px;border-radius:22px;font-weight:600;font-size:13px;color:var(--muted);border:1.5px solid var(--border);background:var(--card)}
+.tab-btn.active{background:var(--green-600);color:#fff;border-color:transparent}
+.adv-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.adv-card{border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;background:var(--card);transition:.2s}
+.adv-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.adv-card .ai{width:46px;height:46px;border-radius:13px;background:var(--green-100);color:var(--green-600);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+[data-theme="dark"] .adv-card .ai{background:#143526;color:var(--green-400)}
+.adv-card p{font-weight:600;font-size:13px}
+.contact-chip{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:var(--input)}
+.contact-chip .ci{width:42px;height:42px;border-radius:50%;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+[data-theme="dark"] .contact-chip .ci{background:#143526;color:var(--green-400)}
+.contact-chip b{font-size:13.5px;display:block}
+.contact-chip span{font-size:12.5px;color:var(--muted)}
+.side-illu{background:linear-gradient(160deg,var(--green-100),#f4fbf6);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%}
+[data-theme="dark"] .side-illu{background:linear-gradient(160deg,#0f2b1e,#11221a)}
+.side-illu h3{font-size:16px}
+.side-illu p{font-size:12.5px;color:var(--muted);max-width:230px}
+.illu-ic{width:74px;height:74px;border-radius:22px;background:var(--green-600);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(22,163,74,.35)}
+.illu-ic svg{width:36px;height:36px}
+
+/* responsive */
+@media(max-width:1100px){
+  .grid-2,.grid-2b,.set-grid,.two-col{grid-template-columns:1fr}
+  .adv-cards{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:1024px){
+  .sidebar{transform:translateX(-105%)}
+  .sidebar.open{transform:none;box-shadow:var(--shadow-lg)}
+  .main{margin-left:0}
+}
+@media(max-width:768px){
+  .page{padding:16px}
+  .topbar{padding:10px 14px}
+  .profile-chip .pmeta{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid .span2{grid-column:1/-1}
+  .adv-cards{grid-template-columns:1fr 1fr}
+  table.resp thead{display:none}
+  table.resp tbody tr{display:block;border:1px solid var(--border);border-radius:14px;margin-bottom:12px;padding:6px 4px;background:var(--card)}
+  table.resp tbody td{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px dashed var(--border);padding:10px 12px}
+  table.resp tbody td:last-child{border-bottom:none}
+  table.resp tbody td::before{content:attr(data-label);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .dropdown{right:14px}
+}
+.rtl{direction:rtl}.rtl .sidebar{left:auto;right:0}.rtl .main{margin-left:0;margin-right:264px}.rtl .field .ficon{left:auto;right:13px}.rtl .field.has-icon input{padding-left:14px;padding-right:40px}.rtl .search-wrap svg{left:auto;right:14px}.rtl .search-wrap input{padding-left:14px;padding-right:42px}.rtl .sb-item,.rtl .dropdown button{text-align:right}.rtl .sb-badge{margin-left:0;margin-right:auto}.rtl .bell-dot{right:auto;left:-5px}.rtl #toastWrap{right:auto;left:24px}.rtl .profile-chip{padding:5px 5px 5px 10px}.rtl .main{transition:.2s}@media(max-width:1024px){.rtl .main{margin-right:0}}
+@media(max-width:520px){
+  .adv-cards{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .type-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= AUTH VIEW ================= -->
+<div id="authView">
+  <div class="auth-left">
+    <svg class="leaf" style="right:-40px;top:-40px" width="260" height="260" viewBox="0 0 24 24" fill="#fff"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>
+    <div class="auth-brand">
+      <div class="logo-badge" id="authLogo"></div>
+      <div><h1><i>Zero Hunger</i></h1><span>Food Sharing Platform for charities organizations</span></div>
+    </div>
+    <h2>Together, we can end hunger.</h2>
+    <p class="lead">Connect restaurants, hotels, donors and charity organisations through offers, partnerships and food donations to support communities.</p>
+    <div class="auth-points">
+      <div><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Publish offers or share food through the platform</div>
+      <div><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Help charities reach people in need</div>
+      <div><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Reduce waste, build a sustainable future</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h3 id="authTitle"><i>Welcome back</i></h3>
+      <p class="sub" id="authSub"><i>Choose your account type and sign in(login) to continue.</i></p>
+      <div class="type-grid" id="typeGrid"></div>
+      <div class="auth-tabs">
+        <button id="tabLogin" class="active" type="button">Login here</button>
+        <button id="tabRegister" type="button"><i>Register</i></button>
+      </div>
+      <form id="authForm" novalidate>
+        <div id="authFields"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="authSubmit" style="margin-top:6px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span id="authSubmitText">Login</span> 
+        </button>
+      </form>
+      <p class="auth-foot" id="authFoot"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP VIEW ================= -->
+<div id="appView">
+  <div class="overlay" id="sbOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="logo-badge" id="sbLogo" style="width:46px;height:46px"></div>
+      <div><h1><i>Zero Hunger</i></h1><span><i>Food Sharing Platform</i></span></div>
+    </div>
+    <nav class="sb-menu" id="sbMenu"></nav>
+    <div class="sb-promo">
+      <svg style="position:absolute;right:-8px;bottom:-8px;opacity:.25" width="90" height="90" viewBox="0 0 24 24" fill="#fff"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>
+      <h4><i>Make a Difference!</i></h4>
+      <p><i>Share food, reduce waste, help people in need, charty organisations and AD for Hotels and Restaurants</i></p>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="hamburger" id="btnHamburger" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="search-wrap">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        <input id="globalSearch" placeholder="Search donations, restaurants, locations..."/>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="btnTheme" aria-label="Toggle dark mode">
+          <svg id="themeIconMoon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg id="themeIconSun" style="display:none" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4l1.4-1.4"/></svg>
+        </button>
+        <button class="icon-btn" id="btnBell" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="bell-dot" id="bellDot" style="display:none">0</span>
+        </button>
+        <div class="profile-chip" id="profileChip">
+          <div class="avatar" id="tbAvatar">A</div>
+          <div class="pmeta"><div class="pname" id="tbName"><i>User</i></div><div class="ptype" id="tbType">Donor</div></div>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </header>
+    <div class="dropdown" id="profileDropdown">
+      <button id="ddProfile" type="button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile &amp; Settings</button>
+      <button id="ddLogout" type="button" style="color:#d43f5b"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><i>Logout</i></button>
+    </div>
+    <main class="page" id="pageContent"></main>
+  </div>
+</div>
+
+<!-- modal + toast -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head"><h3 id="modalTitle"></h3>
+      <button class="modal-x" id="modalX" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+<div id="toastWrap"></div>
+
+<script>
+/* ================================================================
+   ZERO HUNGER — Food Sharing Platform  (front-end prototype)
+   All data is stored locally in the browser (localStorage).
+   ================================================================ */
+'use strict';
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const timeNow = () => new Date().toTimeString().slice(0, 5);
+const fmtDate = iso => { if (!iso) return '—'; const d = new Date(iso); return isNaN(d) ? esc(iso) : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
+const fmtTimeAgo = t => { const s = Math.floor((Date.now() - t) / 1000); if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + 'm ago'; if (s < 86400) return Math.floor(s / 3600) + 'h ago'; return Math.floor(s / 86400) + 'd ago'; };
+const monthsShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const FOOD_TYPES = ['Meals/Entrees', 'Bakery', 'Fruits & Vegetables', 'Beverages', 'Others'];
+const FT_COLORS  = { 'Meals/Entrees':'#0e8a4f', 'Bakery':'#7c3aed', 'Fruits & Vegetables':'#ea7a1f', 'Beverages':'#2563eb', 'Others':'#94a3a0' };
+
+/* ---------- icons ---------- */
+const I = {
+  logo:'<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19 5 21 8.5 20.5 12c-1 4.4-8.5 9-8.5 9z" fill="#0f7a3a"/><path d="M8 3.5C9.5 2 12 1.5 12 1.5S9 4.5 8 3.5zM16 3.5C14.5 2 12 1.5 12 1.5s3 3 4 2z" fill="#22c55e"/><path d="M9.5 10.5v3M8 12h3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>',
+  dashboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+  hotel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l7-5 7 5v13"/><path d="M17 21V11h4v10"/><path d="M8 11h.01M12 11h.01M8 15h.01M12 15h.01M8 19h.01M12 19h.01"/></svg>',
+  restaurant:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 3v7a2 2 0 002 2v9M9 3v7M7 3v9"/><path d="M17 3c-2 0-3 2-3 5v4h3v9M17 3v18"/></svg>',
+  charity:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.7 8 3.5 5 6.8 5c2 0 3.6 1 5.2 3 1.6-2 3.2-3 5.2-3 3.3 0 5.1 3 3.8 6.5-2 4.2-9 8.5-9 8.5z"/></svg>',
+  donate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8s-4 0-4-2.5S12 3 12 8zm0 0s4 0 4-2.5S12 3 12 8z"/></svg>',
+  megaphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-6v16L3 15v-4z"/><path d="M11.6 16.8a3 3 0 11-5.8-1.6"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>',
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h.01a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h.01a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.01a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+  meal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3v7a2 2 0 002 2v9M8 3v9M6 3v9"/><path d="M17 3c-2 0-3 2-3 5v4h3v9M17 3v18"/></svg>',
+  people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3.3 8.3L12 13l8.7-4.7M12 13v9"/></svg>',
+  truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="12" rx="1"/><path d="M15 9h4l3 4v3h-7V9z"/><circle cx="6" cy="18.5" r="2"/><circle cx="18" cy="18.5" r="2"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.7 8 3.5 5 6.8 5c2 0 3.6 1 5.2 3 1.6-2 3.2-3 5.2-3 3.3 0 5.1 3 3.8 6.5-2 4.2-9 8.5-9 8.5z"/></svg>',
+  gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8s-4 0-4-2.5S12 3 12 8zm0 0s4 0 4-2.5S12 3 12 8z"/></svg>',
+  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.13.96.36 1.9.7 2.8a2 2 0 01-.45 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.45c.9.34 1.84.57 2.8.7a2 2 0 011.7 2.05z"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>',
+  leaf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13.5 13.5 0 010 18 13.5 13.5 0 010-18z"/></svg>',
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
+  building:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+};
+const icon = (n, s = 20) => I[n] ? I[n].replace('<svg ', `<svg width="${s}" height="${s}" `) : '';
+
+/* ---------- Built-in local database (one HTML file, no server) ---------- */
+const LS_DATA = 'zh_data_v4', LS_USER = 'zh_user_v4', LS_TOKEN = 'zh_token_v4', LS_AUTH = 'zh_auth_v4';
+const defaultData = () => ({
+  donations: [], offers: [], restaurants: [], hotels: [], charities: [], partners: [],
+  requests: [], beneficiaries: [], distLocations: [], ads: [],
+  notifications: [], theme: 'light'
+});
+const defaultAuth = () => ({
+  users: [{
+    id: 'admin-seed', name: 'Zero Hunger Admin', email: 'admin@zerohunger.local',
+    phone: '+20 10 00000000', location: 'Cairo', area: 'Downtown',
+    password: 'Admin123', type: 'admin', isAdmin: true, avatar: '', joined: Date.now()
+  }],
+  sessions: {}
+});
+function loadJSON(key, fallback) {
+  try { const raw = localStorage.getItem(key); return raw ? Object.assign(fallback(), JSON.parse(raw)) : fallback(); }
+  catch (e) { return fallback(); }
+}
+let DB = loadJSON(LS_DATA, defaultData);
+let AUTH = loadJSON(LS_AUTH, defaultAuth);
+if (!AUTH.users || !AUTH.users.length) AUTH = defaultAuth();
+if (!AUTH.users.some(u => u.email === 'admin@zerohunger.local')) AUTH.users.unshift(defaultAuth().users[0]);
+function demoIso(daysAgo, hour){
+  const d=new Date();
+  d.setDate(d.getDate()-daysAgo);
+  d.setHours(hour||10,(daysAgo*11)%60,0,0);
+  return d.toISOString();
+}
+function demoDate(daysAgo){return demoIso(daysAgo).slice(0,10)}
+function seedZeroHunger(force){
+  const enough=(DB.donations||[]).length>=80 && (DB.offers||[]).length>=25 && (DB.restaurants||[]).length>=15;
+  if(!force && enough) return false;
+  const govs=['Cairo','Alexandria','Giza','Kafr El-Sheikh','Gharbia','Dakahlia','Sharqia','Qalyubia','Beheira','Damietta','Port Said','Suez','Monufia','Ismailia','Minya','Assiut','Luxor','Aswan','Fayoum','Sohag'];
+  const foods=['Meals/Entrees','Bakery','Fruits & Vegetables','Beverages','Others'];
+  const areas=['Downtown','Corniche','El Gomhoria','El Geish','Industrial Zone','University District','Old Town','New City'];
+  const restos=[
+    'El Tahrir Kitchen','Nile Taste','Alexandria Grill','Delta Koshari','Cairo Bites','Green Plate Restaurant',
+    'Fayoum House','Port Said Fish','Luxor Table','Aswan Nubian Kitchen','Mansoura Diner','Tanta Kitchen',
+    'Kafr El-Sheikh Meals','Giza Oven','Sharqia Grill','Suez Harbor Kitchen','Beheira Home Food','Qena Kitchen',
+    'Heliopolis Bites','Maadi Garden Restaurant','Zamalek Cafe Kitchen','Dokki Family Table','Nasr City Meals','6th October Kitchen','New Cairo Plate'
+  ];
+  const hotels=[
+    'Nile View Hotel','Alexandria Corniche Hotel','Giza Pyramid Inn','Delta Grand Hotel','Cairo Palm Hotel',
+    'Luxor Temple Hotel','Aswan River Hotel','Port Said Marine Hotel','Mansoura Plaza Hotel','Tanta Central Hotel',
+    'Kafr El-Sheikh Garden Hotel','Suez Canal Hotel','Fayoum Lake Hotel','Hurghada Sun Hotel','Ismailia Park Hotel',
+    'Minya Palace Hotel','Sohag Guest Hotel','Qena Oasis Hotel'
+  ];
+  const charities=[
+    'Goodwill Food Bank','Hope Kitchen','Mercy Relief Egypt','Orphans Care House','Community Pot Cairo',
+    'Alexandria Aid Society','Delta Charity Network','Nile Hands Organisation','Share Bread Initiative','Warm Plate Foundation',
+    'Kafr El-Sheikh Relief','Upper Egypt Kitchen','Children First Charity','Neighborhood Meals','Together for Hunger'
+  ];
+  const donors=[
+    'Amira Hassan','Omar Farouk','Nour El-Din','Salma Adel','Youssef Kamal','Hana Magdy','Karim Tarek',
+    'Laila Mostafa','Hassan Fathy','Mona Saeed','Tamer Ashraf','Dina Mahmoud','Sherif Nabil','Aya Ibrahim',
+    'Mostafa Samir','Rania Fouad','Adel Hamdy','Farida Nasser','Walid Sherif','Heba Lotfy'
+  ];
+  const notes=[
+    'Freshly packed and ready for pickup this evening.',
+    'Kept chilled. Please collect before expiry.',
+    'Surplus from an event. Still sealed and labeled.',
+    'Family-size portions suitable for distribution.',
+    'Please bring insulated boxes if possible.'
+  ];
+  const offerTitlesR=[
+    'Community meal discount','Family platter offer','Charity lunch deal','Weekday surplus box','Ramadan sharing plate'
+  ];
+  const offerTitlesH=[
+    'Charity overnight stay','Community room rate','Weekend support night','Relief accommodation offer','Partner stay discount'
+  ];
+  const statuses=['Pending','Received','Requested','Received','Pending','Received'];
+
+  const restaurants=restos.slice();
+  const hotelsArr=hotels.slice();
+  const partners=[];
+  const donations=[];
+  const offers=[];
+  const ads=[];
+  const notifications=[];
+  const requests=[];
+  const beneficiaries=[];
+  const distLocations=[];
+  const charityRecs=[];
+  const demoUsers=[];
+
+  function phone(prefix,n){return '+20 10 '+String(20000000+n).slice(-8)}
+
+  restos.forEach((name,i)=>{
+    const loc=govs[i%govs.length], ph=phone(10,i+11);
+    partners.push({id:'p-r-'+i,name,type:'Restaurant',phone:ph,location:loc,donations:0,meals:0,offers:0,ads:0});
+    demoUsers.push({id:'u-r-'+i,name,email:'resto'+(i+1)+'@zerohunger.local',phone:ph,location:loc,area:areas[i%areas.length],password:'Demo123',type:'restaurant',isAdmin:false,avatar:'',joined:Date.now()-i*86400000});
+  });
+  hotels.forEach((name,i)=>{
+    const loc=govs[(i+4)%govs.length], ph=phone(11,i+41);
+    partners.push({id:'p-h-'+i,name,type:'Hotel',phone:ph,location:loc,donations:0,meals:0,offers:0,ads:0});
+    demoUsers.push({id:'u-h-'+i,name,email:'hotel'+(i+1)+'@zerohunger.local',phone:ph,location:loc,area:areas[(i+2)%areas.length],password:'Demo123',type:'hotel',isAdmin:false,avatar:'',joined:Date.now()-i*86400000});
+  });
+  charities.forEach((name,i)=>{
+    const loc=govs[(i+2)%govs.length], ph=phone(12,i+71);
+    const types=['Food Bank','Orphanage','Relief Organisation','Community Kitchen','Other'];
+    charityRecs.push({id:'ch-'+i,name,person:donors[i%donors.length],phone:ph,email:'charity'+(i+1)+'@zerohunger.local',location:loc,type:types[i%types.length],desc:'Community organisation helping families access surplus meals.',joined:Date.now()-i*43200000});
+    demoUsers.push({id:'u-c-'+i,name,email:'charity'+(i+1)+'@zerohunger.local',phone:ph,location:loc,area:areas[i%areas.length],password:'Demo123',type:'charity',isAdmin:false,avatar:'',joined:Date.now()-i*86400000});
+    requests.push({id:'rq-'+i,org:name,foodType:foods[i%foods.length],quantity:20+(i*7)%80,location:loc,date:demoDate(i%20)});
+    beneficiaries.push({id:'bf-'+i,name:name+' beneficiaries',count:40+(i*13)%180,location:loc});
+    distLocations.push({id:'dl-'+i,name:name+' distribution point',area:loc+' — '+areas[i%areas.length]});
+  });
+  donors.forEach((name,i)=>{
+    const loc=govs[(i+6)%govs.length], ph=phone(15,i+101);
+    demoUsers.push({id:'u-d-'+i,name,email:'donor'+(i+1)+'@zerohunger.local',phone:ph,location:loc,area:areas[i%areas.length],password:'Demo123',type:'donor',isAdmin:false,avatar:'',joined:Date.now()-i*86400000});
+  });
+
+  let did=0;
+  function addDon(donorName,source,i){
+    const loc=govs[i%govs.length];
+    const qty=12+(i*9)%90;
+    const rec={
+      id:'don-'+did, donorName, source, foodType:foods[i%foods.length], quantity:qty,
+      date:demoDate((i%170)+1), expiry:demoDate(Math.max(0,(i%12)-2)),
+      location:loc, area:areas[i%areas.length], phone:phone(10,i+3),
+      notes:notes[i%notes.length], image:'', status:statuses[i%statuses.length],
+      createdAt:demoIso((i%170)+1, 8+(i%10))
+    };
+    did++; donations.push(rec);
+    const p=partners.find(x=>x.name===donorName);
+    if(p){ p.donations++; p.meals+=qty; }
+  }
+  restos.forEach((name,i)=>{ for(let k=0;k<4;k++) addDon(name,'restaurant', i*4+k); });
+  hotels.forEach((name,i)=>{ for(let k=0;k<3;k++) addDon(name,'hotel', 200+i*3+k); });
+  donors.forEach((name,i)=>{ for(let k=0;k<2;k++) addDon(name,'donor', 400+i*2+k); });
+
+  restos.forEach((name,i)=>{
+    const loc=govs[i%govs.length];
+    offers.push({
+      id:'off-r-'+i, businessType:'Restaurant', restaurantName:name, hotelName:'',
+      title:offerTitlesR[i%offerTitlesR.length]+' — '+name, discount:10+(i*5)%45,
+      audience:['Both','Charity Organisations','Regular Customers'][i%3],
+      location:loc, phone:phone(10,i+11), validUntil:demoDate(-(10+i%20)),
+      description:'Discounted meals to support families and reduce leftover waste.',
+      featured:i%5===0, image:'', views:20+(i*17)%240, clicks:4+(i*7)%60, createdAt:Date.now()-i*3600000
+    });
+    const p=partners.find(x=>x.name===name && x.type==='Restaurant'); if(p) p.offers++;
+  });
+  hotels.forEach((name,i)=>{
+    const loc=govs[(i+4)%govs.length];
+    offers.push({
+      id:'off-h-'+i, businessType:'Hotel', restaurantName:name, hotelName:name,
+      title:offerTitlesH[i%offerTitlesH.length]+' — '+name, discount:15+(i*6)%40,
+      audience:['Both','Charity Organisations'][i%2],
+      location:loc, phone:phone(11,i+41), validUntil:demoDate(-(8+i%18)),
+      description:'Reduced stay rate for charity teams supporting food distribution.',
+      featured:i%4===0, image:'', views:12+(i*13)%180, clicks:3+(i*5)%40, createdAt:Date.now()-i*5400000
+    });
+    const p=partners.find(x=>x.name===name && x.type==='Hotel'); if(p) p.offers++;
+  });
+
+  const adTypes=['Advertisement','Featured Campaign','Community Offer'];
+  [...restos.slice(0,14), ...hotels.slice(0,10)].forEach((name,i)=>{
+    const isHotel=hotels.includes(name);
+    const loc=govs[i%govs.length];
+    ads.push({
+      id:'ad-'+i, businessType:isHotel?'Hotel':'Restaurant', business:name, owner:name,
+      title:(isHotel?'Hotel support ad: ':'Restaurant support ad: ')+name,
+      adType:adTypes[i%adTypes.length], governorate:loc, location:loc, country:'Egypt',
+      phone:phone(10,i+21), discount:8+(i*4)%30, duration:(2+(i%4))+' weeks',
+      startDate:demoDate(20-i), endDate:demoDate(-(10+i%12)),
+      desc:'Advertisement supporting the Zero Hunger platform and local food access.',
+      featured:i%6===0, status:['pending','active','active','expired'][i%4],
+      views:5+(i*19)%300, clicks:1+(i*6)%70, createdAt:Date.now()-i*7200000
+    });
+    const p=partners.find(x=>x.name===name); if(p) p.ads++;
+  });
+
+  donations.slice(0,40).forEach((d,i)=>{
+    notifications.push({id:'n-don-'+i,text:'New donation from '+d.donorName+': '+d.quantity+' meals',icon:'donate',time:Date.now()-(i+1)*3600000,read:i>12});
+  });
+  offers.slice(0,20).forEach((o,i)=>{
+    notifications.push({id:'n-off-'+i,text:'New '+(o.businessType||'').toLowerCase()+' offer: '+o.title,icon:'megaphone',time:Date.now()-(i+3)*5400000,read:i>6});
+  });
+  ads.slice(0,12).forEach((a,i)=>{
+    notifications.push({id:'n-ad-'+i,text:'New advertisement request from '+a.business,icon:'megaphone',time:Date.now()-(i+2)*7200000,read:false});
+  });
+  charityRecs.slice(0,10).forEach((c,i)=>{
+    notifications.push({id:'n-ch-'+i,text:'Charity organisation registered: '+c.name,icon:'charity',time:Date.now()-(i+1)*8600000,read:i>3});
+  });
+
+  if(force){
+    DB.donations=donations; DB.offers=offers; DB.restaurants=restaurants; DB.hotels=hotelsArr;
+    DB.charities=charityRecs; DB.partners=partners; DB.requests=requests;
+    DB.beneficiaries=beneficiaries; DB.distLocations=distLocations; DB.ads=ads;
+    DB.notifications=notifications;
+  }else{
+    const byId=(arr,key='id')=>new Set((arr||[]).map(x=>x[key]));
+    const merge=(cur,extra,key='id')=>{const s=byId(cur,key); return (cur||[]).concat(extra.filter(x=>!s.has(x[key])));};
+    DB.donations=merge(DB.donations,donations);
+    DB.offers=merge(DB.offers,offers);
+    DB.ads=merge(DB.ads,ads);
+    DB.notifications=merge(DB.notifications,notifications);
+    DB.requests=merge(DB.requests,requests);
+    DB.beneficiaries=merge(DB.beneficiaries,beneficiaries);
+    DB.distLocations=merge(DB.distLocations,distLocations);
+    DB.charities=merge(DB.charities,charityRecs);
+    DB.partners=merge(DB.partners,partners);
+    restaurants.forEach(n=>{ if(!DB.restaurants.includes(n)) DB.restaurants.push(n); });
+    hotelsArr.forEach(n=>{ if(!DB.hotels.includes(n)) DB.hotels.push(n); });
+  }
+
+  demoUsers.forEach(u=>{
+    if(!AUTH.users.some(x=>String(x.email||'').toLowerCase()===u.email)) AUTH.users.push(u);
+  });
+  return true;
+}
+seedZeroHunger(false);
+const saveLocal = () => {
+  try { localStorage.setItem(LS_DATA, JSON.stringify(DB)); } catch (e) {}
+  try { localStorage.setItem(LS_AUTH, JSON.stringify(AUTH)); } catch (e) {}
+};
+const save = () => saveLocal();
+let TOKEN = '';
+try { TOKEN = localStorage.getItem(LS_TOKEN) || ''; } catch (e) {}
+let USER = null;
+try { USER = JSON.parse(localStorage.getItem(LS_USER) || 'null'); } catch (e) {}
+const API_ONLINE = true;
+function publicUser(u) {
+  if (!u) return null;
+  return { id: u.id, name: u.name, email: u.email || '', phone: u.phone || '', location: u.location || '', area: u.area || '', type: u.type, isAdmin: !!(u.isAdmin || u.type === 'admin'), avatar: u.avatar || '', joined: u.joined };
+}
+function currentUser() {
+  const id = AUTH.sessions && AUTH.sessions[TOKEN];
+  return AUTH.users.find(u => u.id === id) || null;
+}
+function setSession(user) {
+  TOKEN = uid() + uid();
+  AUTH.sessions = AUTH.sessions || {};
+  AUTH.sessions[TOKEN] = user.id;
+  USER = publicUser(user);
+  try { localStorage.setItem(LS_TOKEN, TOKEN); localStorage.setItem(LS_USER, JSON.stringify(USER)); } catch (e) {}
+  saveLocal();
+}
+function applyState() { saveLocal(); }
+function bumpPartner(name, type, extra) {
+  ensurePartner(name, type, extra && extra.phone, extra && extra.location);
+  const p = partnerFor(name, type);
+  if (!p || !extra) return;
+  if (extra.donations) p.donations = (p.donations || 0) + extra.donations;
+  if (extra.meals) p.meals = (p.meals || 0) + extra.meals;
+  if (extra.offers) p.offers = (p.offers || 0) + extra.offers;
+  if (extra.ads) p.ads = (p.ads || 0) + extra.ads;
+}
+function localFail(msg) { const e = new Error(msg); e.status = 400; throw e; }
+async function api(path, { method = 'GET', body = null } = {}) {
+  const m = (method || 'GET').toUpperCase();
+  const b = body || {};
+  const me = currentUser();
+  const needAuth = !['/register', '/login'].includes(path);
+  if (needAuth && !me && path !== '/health') localFail('Login required');
+  let out = { ok: true };
+
+  if (path === '/register' && m === 'POST') {
+    if (!b.name || !(b.email || '').trim() || String(b.password || '').length < 6) localFail('Name, email and password (6+ chars) are required');
+    const email = String(b.email).trim().toLowerCase();
+    if (AUTH.users.some(u => (u.email || '').toLowerCase() === email)) localFail('Email already registered');
+    const user = { id: uid(), name: b.name.trim(), email, phone: b.phone || '', location: b.location || '', area: b.area || '', password: String(b.password), type: b.type || 'donor', isAdmin: false, avatar: '', joined: Date.now() };
+    AUTH.users.push(user);
+    if (user.type === 'restaurant') { if (!DB.restaurants.includes(user.name)) DB.restaurants.push(user.name); bumpPartner(user.name, 'Restaurant', { phone: user.phone, location: user.location }); }
+    if (user.type === 'hotel') { if (!DB.hotels.includes(user.name)) DB.hotels.push(user.name); bumpPartner(user.name, 'Hotel', { phone: user.phone, location: user.location }); }
+    if (user.type === 'charity' && !DB.charities.some(c => c.name === user.name)) {
+      DB.charities.push({ id: uid(), name: user.name, person: user.name, phone: user.phone, email: user.email, location: user.location, type: 'Community Organisation', desc: '', joined: Date.now() });
+    }
+    notify('New ' + user.type + ' joined: ' + user.name, 'people');
+    setSession(user);
+    out = { ok: true, token: TOKEN, user: USER, data: DB };
+  } else if (path === '/login' && m === 'POST') {
+    const key = String(b.email || b.name || '').trim().toLowerCase();
+    const user = AUTH.users.find(u => (u.email || '').toLowerCase() === key || (u.name || '').toLowerCase() === key);
+    if (!user || String(user.password) !== String(b.password || '')) localFail('Invalid name/email or password');
+    if (b.type && b.type !== user.type && user.type !== 'admin') localFail('Account type does not match');
+    setSession(user);
+    out = { ok: true, token: TOKEN, user: USER, data: DB };
+  } else if (path === '/logout' && m === 'POST') {
+    if (TOKEN && AUTH.sessions) delete AUTH.sessions[TOKEN];
+    saveLocal();
+  } else if (path === '/bootstrap' || path === '/state' || path === '/me' && m === 'GET') {
+    out = { ok: true, user: publicUser(me), data: DB };
+  } else if (path === '/me' && (m === 'PATCH' || m === 'PUT')) {
+    Object.assign(me, {
+      name: b.name != null ? b.name : me.name,
+      phone: b.phone != null ? b.phone : me.phone,
+      email: b.email != null ? b.email : me.email,
+      location: b.location != null ? b.location : me.location,
+      area: b.area != null ? b.area : me.area,
+      type: b.type != null ? b.type : me.type,
+      avatar: b.avatar != null ? b.avatar : me.avatar
+    });
+    if (b.password) me.password = String(b.password);
+    USER = publicUser(me);
+    try { localStorage.setItem(LS_USER, JSON.stringify(USER)); } catch (e) {}
+    out = { ok: true, user: USER, data: DB };
+  } else if (path === '/donations' && m === 'POST') {
+    const rec = {
+      id: uid(), donorName: b.donorName || me.name, source: b.source || 'donor', foodType: b.foodType,
+      quantity: parseInt(b.quantity) || 0, date: b.date, expiry: b.expiry, location: b.location || me.location,
+      area: b.area || '', phone: b.phone || me.phone, notes: b.notes || '', image: b.image || '',
+      status: 'Pending', createdAt: Date.now()
+    };
+    DB.donations.unshift(rec);
+    if (rec.source === 'restaurant' && !DB.restaurants.includes(rec.donorName)) DB.restaurants.push(rec.donorName);
+    if (rec.source === 'hotel' && !DB.hotels.includes(rec.donorName)) DB.hotels.push(rec.donorName);
+    if (rec.source === 'restaurant' || rec.source === 'hotel')
+      bumpPartner(rec.donorName, rec.source === 'hotel' ? 'Hotel' : 'Restaurant', { phone: rec.phone, location: rec.location, donations: 1, meals: rec.quantity });
+    notify('New donation from ' + rec.donorName + ': ' + rec.quantity + ' meals', 'donate');
+    out = { ok: true, id: rec.id, data: DB };
+  } else if (path.startsWith('/donations/') && m === 'PATCH') {
+    const rec = DB.donations.find(x => x.id === path.split('/')[2]);
+    if (!rec) localFail('Donation not found');
+    rec.status = b.status || rec.status;
+    if (rec.status === 'Reserved') rec.reservedBy = me.name;
+    notify('Donation ' + rec.status.toLowerCase() + ': ' + rec.donorName, 'truck');
+    out = { ok: true, data: DB };
+  } else if (path === '/offers' && m === 'POST') {
+    const btype = b.businessType || (me.type === 'hotel' ? 'Hotel' : 'Restaurant');
+    const bname = b.restaurantName || b.hotelName || b.businessName || me.name;
+    const rec = {
+      id: uid(), businessType: btype, restaurantName: bname, hotelName: btype === 'Hotel' ? bname : '',
+      title: b.title, discount: parseInt(b.discount) || 0, audience: b.audience, location: b.location || me.location,
+      phone: b.phone || me.phone, validUntil: b.validUntil, description: b.description || '', featured: !!b.featured,
+      image: b.image || '', views: 0, clicks: 0, createdAt: Date.now()
+    };
+    DB.offers.unshift(rec);
+    if (btype === 'Restaurant' && !DB.restaurants.includes(bname)) DB.restaurants.push(bname);
+    if (btype === 'Hotel' && !DB.hotels.includes(bname)) DB.hotels.push(bname);
+    bumpPartner(bname, btype, { phone: rec.phone, location: rec.location, offers: 1 });
+    notify('New ' + btype.toLowerCase() + ' offer: ' + rec.title, 'megaphone');
+    out = { ok: true, id: rec.id, data: DB };
+  } else if (path.startsWith('/offers/') && m === 'PATCH') {
+    const rec = DB.offers.find(x => x.id === path.split('/')[2]);
+    if (rec) { if (b.view) rec.views = (rec.views || 0) + 1; if (b.click) rec.clicks = (rec.clicks || 0) + 1; }
+    out = { ok: true, data: DB };
+  } else if (path === '/ads' && m === 'POST') {
+    const rec = {
+      id: uid(), businessType: b.businessType || 'Restaurant', business: b.business || me.name, owner: b.owner || me.name,
+      title: b.title || b.business || 'Advertisement', adType: b.adType, governorate: b.governorate || b.location,
+      location: b.governorate || b.location, country: b.country || 'Egypt', phone: b.phone || me.phone,
+      discount: parseInt(b.discount) || 0, duration: b.duration || '', startDate: b.startDate, endDate: b.endDate,
+      desc: b.desc || b.description || '', featured: !!(b.featured === true || b.featured === 'on'),
+      status: 'pending', views: 0, clicks: 0, createdAt: Date.now()
+    };
+    DB.ads.unshift(rec);
+    bumpPartner(rec.business, rec.businessType, { phone: rec.phone, location: rec.governorate, ads: 1 });
+    notify('New advertisement request from ' + rec.business, 'megaphone');
+    out = { ok: true, id: rec.id, data: DB };
+  } else if (path.startsWith('/ads/') && (m === 'PATCH' || m === 'DELETE')) {
+    const id = path.split('/')[2];
+    if (m === 'DELETE') DB.ads = DB.ads.filter(x => x.id !== id);
+    else {
+      const rec = DB.ads.find(x => x.id === id);
+      if (!rec) localFail('Ad not found');
+      if (b.status) rec.status = b.status;
+      if ('featured' in b) rec.featured = !!b.featured;
+      if (b.view) rec.views = (rec.views || 0) + 1;
+      if (b.click) rec.clicks = (rec.clicks || 0) + 1;
+    }
+    out = { ok: true, data: DB };
+  } else if (path === '/charities' && m === 'POST') {
+    DB.charities.push({ id: uid(), name: b.name, person: b.person, phone: b.phone, email: b.email, location: b.location, type: b.type, desc: b.desc || '', joined: Date.now() });
+    notify('Charity organisation registered: ' + b.name, 'charity');
+    out = { ok: true, data: DB };
+  } else if (path === '/requests' && m === 'POST') {
+    DB.requests.push({ id: uid(), org: b.org || me.name, foodType: b.foodType, quantity: parseInt(b.quantity) || 0, location: b.location, date: b.date });
+    notify('Donation request from ' + (b.org || me.name), 'doc');
+    out = { ok: true, data: DB };
+  } else if (path === '/beneficiaries' && m === 'POST') {
+    DB.beneficiaries.push({ id: uid(), name: b.name, count: parseInt(b.count) || 0, location: b.location });
+    out = { ok: true, data: DB };
+  } else if (path === '/locations' && m === 'POST') {
+    DB.distLocations.push({ id: uid(), name: b.name, area: b.area });
+    out = { ok: true, data: DB };
+  } else if (path === '/theme' && m === 'POST') {
+    DB.theme = b.theme === 'dark' ? 'dark' : 'light';
+    out = { ok: true, theme: DB.theme };
+  } else if (path === '/upload' && m === 'POST') {
+    out = { ok: true, url: b.dataUrl || b.image || '' };
+  } else if (path === '/notifications/read' && m === 'PATCH') {
+    DB.notifications.forEach(n => n.read = true);
+    out = { ok: true, data: DB };
+  } else if (path === '/notifications' && m === 'DELETE') {
+    DB.notifications = [];
+    out = { ok: true, data: DB };
+  } else {
+    out = { ok: true, data: DB, user: publicUser(me) };
+  }
+  saveLocal();
+  if (out.data) applyState();
+  if (out.user) USER = out.user;
+  return out;
+}
+async function refreshState() {
+  if (!TOKEN) return;
+  try { await api('/bootstrap'); } catch (e) {}
+}
+function phoneHref(p) {
+  const n = String(p || '').replace(/[^\d+]/g, '');
+  return n ? 'tel:' + n : '#';
+}
+function waHref(p) {
+  const n = String(p || '').replace(/[^\d]/g, '');
+  return n ? 'https://wa.me/' + n : '';
+}
+function contactButtons(phone) {
+  if (!phone) return '—';
+  const wa = waHref(phone);
+  return `<span style="display:inline-flex;gap:6px;flex-wrap:wrap">
+    <a href="${phoneHref(phone)}" class="badge b-info">${icon('phone',12)} ${esc(phone)}</a>
+    ${wa ? `<a href="${wa}" target="_blank" rel="noopener" class="badge b-active">WhatsApp</a>` : ''}
+  </span>`;
+}
+function statusBadge(st) {
+  const s = st || 'Pending';
+  const cls = s === 'Received' || s === 'Distributed' ? 'b-active' : s === 'Reserved' ? 'b-info' : s === 'Pending' ? 'b-pending' : 'b-rose';
+  return `<span class="badge ${cls}">${esc(s)}</span>`;
+}
+function isAdmin() { return !!(USER && (USER.isAdmin || USER.type === 'admin')); }
+function canSee(pageId) {
+  if (!USER) return false;
+  if (isAdmin()) return true;
+  const t = USER.type;
+  const map = {
+    dashboard: true, notifications: true, settings: true,
+    hotels: t === 'hotel' || t === 'charity' || t === 'donor',
+    restaurants: t === 'restaurant' || t === 'charity' || t === 'donor',
+    charities: t === 'charity' || t === 'donor' || t === 'restaurant' || t === 'hotel',
+    donate: t === 'donor' || t === 'restaurant' || t === 'hotel',
+    promotions: true,
+    ads: t === 'restaurant' || t === 'hotel' || t === 'donor',
+    admin: false
+  };
+  if (pageId === 'admin') return false;
+  return map[pageId] !== false;
+}
+
+/* ---------- Egypt governorates + partner directory ---------- */
+const EGYPT_GOVERNORATES = ['Cairo','Alexandria','Port Said','Suez','Damietta','Dakahlia','Sharqia','Qalyubia','Kafr El-Sheikh','Gharbia','Monufia','Beheira','Ismailia','Giza','Beni Suef','Fayoum','Minya','Assiut','Sohag','Qena','Luxor','Aswan','Red Sea','New Valley','Matrouh','North Sinai','South Sinai'];
+const govSelect = (label='Governorate', name='governorate', required=true) => `<div class="field has-icon"><label>${label}</label><span class="ficon">${icon('pin',16)}</span><select name="${name}" ${required?'required':''}><option value="" disabled selected>Select governorate</option>${EGYPT_GOVERNORATES.map(g=>`<option>${g}</option>`).join('')}</select></div>`;
+const normGov = v => (v||'').toString().trim().toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه');
+function ensurePartner(name, type, phone='', location='') {
+  if (!name) return;
+  DB.partners = DB.partners || [];
+  let p = DB.partners.find(x => x.name.toLowerCase() === name.toLowerCase() && x.type === type);
+  if (!p) DB.partners.push({id:uid(),name,type,phone:phone||'',location:location||'',donations:0,meals:0,offers:0,ads:0});
+  else { if(phone) p.phone=phone; if(location) p.location=location; }
+}
+function partnerFor(name,type){ return (DB.partners||[]).find(x=>x.name.toLowerCase()===String(name||'').toLowerCase()&&x.type===type); }
+function donationRankings(){
+  const map={};
+  DB.donations.forEach(d=>{ if(!d.donorName)return; const type=d.source==='hotel'?'Hotel':d.source==='restaurant'?'Restaurant':'Donor'; const key=type+'|'+d.donorName; if(!map[key])map[key]={name:d.donorName,type,donations:0,meals:0,phone:d.phone||'',location:d.location||''}; map[key].donations++; map[key].meals+=parseInt(d.quantity)||0; if(d.phone)map[key].phone=d.phone; if(d.location)map[key].location=d.location; });
+  (DB.partners||[]).forEach(p=>{const key=p.type+'|'+p.name;if(!map[key])map[key]={name:p.name,type:p.type,donations:0,meals:0,phone:p.phone||'',location:p.location||''};});
+  return Object.values(map).sort((a,b)=>b.donations-a.donations||b.meals-a.meals);
+}
+function offerRankings(){
+  const rows=[];
+  DB.offers.forEach(o=>{
+    const type = o.businessType === 'Hotel' ? 'Hotel' : 'Restaurant';
+    const name = o.restaurantName || o.businessName || o.hotelName || '';
+    rows.push({
+      name, type, discount: parseInt(o.discount)||0, title: o.title,
+      location: o.location, phone: o.phone || (partnerFor(name, type)||{}).phone || '',
+      audience: o.audience || '', validUntil: o.validUntil || ''
+    });
+  });
+  (DB.ads||[]).filter(a => a.status !== 'expired' && (parseInt(a.discount)||0) > 0).forEach(a=>{
+    const type = a.businessType === 'Hotel' ? 'Hotel' : (a.businessType === 'Restaurant' ? 'Restaurant' : a.businessType || 'Business');
+    rows.push({
+      name: a.business, type, discount: parseInt(a.discount)||0, title: a.title,
+      location: a.governorate || a.location, phone: a.phone || (partnerFor(a.business, type)||{}).phone || '',
+      audience: a.adType || 'Advertisement', validUntil: a.endDate || ''
+    });
+  });
+  return rows.sort((a,b)=>b.discount-a.discount || String(a.name).localeCompare(String(b.name)));
+}
+function nearbyPartners(location){
+  const g=normGov(location); const out=[]; const seen=new Set();
+  const add=(name,type,phone,loc)=>{
+    if(!name||!type||normGov(loc)!==g) return;
+    const k=type+'|'+name.toLowerCase();
+    if(seen.has(k)){
+      const prev=out.find(x=>x.type===type && x.name.toLowerCase()===name.toLowerCase());
+      if(prev && phone && !prev.phone) prev.phone=phone;
+      return;
+    }
+    seen.add(k); out.push({name,type,phone:phone||'',location:loc||''});
+  };
+  (DB.partners||[]).forEach(p=>{if(p.type==='Restaurant'||p.type==='Hotel') add(p.name,p.type,p.phone,p.location);});
+  DB.donations.forEach(d=>{
+    const type=d.source==='hotel'?'Hotel':d.source==='restaurant'?'Restaurant':'';
+    if(type) add(d.donorName,type,d.phone,d.location);
+  });
+  (DB.offers||[]).forEach(o=>{
+    const type=o.businessType==='Hotel'?'Hotel':'Restaurant';
+    add(o.hotelName||o.restaurantName,type,o.phone,o.location);
+  });
+  (DB.ads||[]).forEach(a=>{
+    const type=a.businessType==='Hotel'?'Hotel':a.businessType==='Restaurant'?'Restaurant':'';
+    if(type) add(a.business,type,a.phone,a.governorate||a.location);
+  });
+  return out;
+}
+
+/* ---------- derived stats ---------- */
+const stats = () => {
+  const totalMeals = DB.donations.reduce((a, d) => a + (parseInt(d.quantity) || 0), 0);
+  return {
+    totalMeals,
+    peopleHelped: totalMeals,
+    activeRestaurants: DB.restaurants.length,
+    activeHotels: DB.hotels.length,
+    charities: DB.charities.length,
+    totalDonations: DB.donations.length,
+    activeOffers: DB.offers.filter(o => !o.validUntil || o.validUntil >= todayISO()).length,
+    totalAdViews: DB.ads.reduce((a, x) => a + (parseInt(x.views) || 0), 0),
+    totalAdClicks: DB.ads.reduce((a, x) => a + (parseInt(x.clicks) || 0), 0),
+    mealsDistributed: DB.donations.filter(d => d.status === 'Received').reduce((a, d) => a + (parseInt(d.quantity) || 0), 0),
+    receivedCount: DB.donations.filter(d => d.status === 'Received').length,
+    pendingCount: DB.donations.filter(d => d.status === 'Pending').length,
+    peopleSupported: DB.beneficiaries.reduce((a, b) => a + (parseInt(b.count) || 0), 0),
+    unread: DB.notifications.filter(n => !n.read).length
+  };
+};
+
+/* ---------- toast & notifications ---------- */
+function toast(msg, type = 'ok') {
+  const t = document.createElement('div');
+  t.className = 'toast' + (type === 'err' ? ' err' : '');
+  t.innerHTML = `<span style="color:${type === 'err' ? '#e11d48' : 'var(--green-500)'}">${icon(type === 'err' ? 'info' : 'check', 18)}</span><span>${esc(msg)}</span>`;
+  $('#toastWrap').appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = '.4s'; setTimeout(() => t.remove(), 400); }, 3400);
+}
+function notify(text, ic = 'bell') {
+  DB.notifications.unshift({ id: uid(), text, icon: ic, time: Date.now(), read: false });
+  save(); updateBell();
+}
+function updateBell() {
+  const n = stats().unread, dot = $('#bellDot');
+  dot.style.display = n > 0 ? 'flex' : 'none';
+  dot.textContent = n > 9 ? '9+' : n;
+}
+
+/* ---------- modal ---------- */
+let modalSubmit = null;
+function openModal(title, bodyHTML, { submitLabel = 'Submit', onSubmit = null, wide = false } = {}) {
+  $('#modalTitle').textContent = title;
+  $('#modalBody').innerHTML = bodyHTML;
+  const foot = $('#modalFoot');
+  foot.innerHTML = onSubmit
+    ? `<button class="btn btn-ghost" type="button" id="modalCancel">Cancel</button>
+       <button class="btn btn-primary" type="button" id="modalOk">${esc(submitLabel)} ${icon('send', 15)}</button>`
+    : `<button class="btn btn-outline" type="button" id="modalCancel">Close</button>`;
+  $('.modal').style.maxWidth = wide ? '860px' : '760px';
+  modalSubmit = onSubmit;
+  $('#modalOverlay').classList.add('open');
+  const cancel = $('#modalCancel');
+  if (cancel) cancel.onclick = closeModal;
+  const ok = $('#modalOk');
+  if (ok && onSubmit) ok.onclick = async () => {
+    const form = $('#modalBody form');
+    if (form && !form.reportValidity()) return;
+    const data = {};
+    $$('#modalBody [name]').forEach(el => {
+      if (el.type === 'file') return;
+      data[el.name] = el.type === 'checkbox' ? el.checked : el.value.trim();
+    });
+    ok.disabled = true;
+    try { await onSubmit(data); } finally { ok.disabled = false; }
+  };
+}
+function closeModal() { $('#modalOverlay').classList.remove('open'); modalSubmit = null; }
+$('#modalX').addEventListener('click', closeModal);
+$('#modalOverlay').addEventListener('click', e => { if (e.target.id === 'modalOverlay') closeModal(); });
+
+/* ---------- field helpers ---------- */
+const fld = (label, name, type = 'text', ph = '', extra = '') =>
+  `<div class="field"><label>${label}</label><input name="${name}" type="${type}" placeholder="${ph}" ${extra}/></div>`;
+const fldIcon = (label, name, ic, type = 'text', ph = '', extra = '') =>
+  `<div class="field has-icon"><label>${label}</label><span class="ficon">${icon(ic, 16)}</span><input name="${name}" type="${type}" placeholder="${ph}" ${extra}/></div>`;
+const selFld = (label, name, options, ph = 'Select...', extra = '') =>
+  `<div class="field"><label>${label}</label><select name="${name}" ${extra}><option value="" disabled selected>${ph}</option>${options.map(o => `<option>${esc(o)}</option>`).join('')}</select></div>`;
+const emptyState = (ic, title, msg) =>
+  `<div class="empty"><div class="eic">${icon(ic, 34)}</div><h4>${title}</h4><p>${msg}</p></div>`;
+</script>
+
+<script>
+/* ================= AUTH ================= */
+const ACCOUNT_TYPES = [
+  { id: 'restaurant', label: 'Restaurant', icon: 'restaurant' },
+  { id: 'hotel',      label: 'Hotel',      icon: 'hotel' },
+  { id: 'charity',    label: 'Charity Organisation', icon: 'charity' },
+  { id: 'donor',      label: 'Donor',      icon: 'heart' }
+];
+let authMode = 'login', authType = 'donor';
+$('#authLogo').innerHTML = icon('logo', 30);
+$('#sbLogo').innerHTML = icon('logo', 27);
+
+function renderTypeGrid() {
+  $('#typeGrid').innerHTML = ACCOUNT_TYPES.map(t =>
+    `<div class="type-card ${t.id === authType ? 'active' : ''}" data-type="${t.id}">${icon(t.icon, 26)}<p>${t.label}</p></div>`).join('');
+  $$('#typeGrid .type-card').forEach(c => c.onclick = () => { authType = c.dataset.type; renderTypeGrid(); renderAuthFields(); });
+}
+function renderAuthFields() {
+  const t = ACCOUNT_TYPES.find(x => x.id === authType);
+  const nameLabel = authType === 'charity' ? 'Organisation Name' : 'Full Name';
+  const namePh = authType === 'charity' ? 'Enter organisation name' : 'Enter your full name';
+  let h = '';
+  if (authMode === 'register') {
+    h += fldIcon(nameLabel, 'name', 'user', 'text', namePh, 'required');
+    h += `<div class="two-col" style="gap:12px">
+      <div class="field has-icon"><label>Phone Number</label><span class="ficon">${icon('phone', 16)}</span><input name="phone" type="tel" placeholder="+20 10 12345678" required/></div>
+      <div class="field has-icon"><label>Email Address</label><span class="ficon">${icon('mail', 16)}</span><input name="email" type="email" placeholder="you@example.com" required/></div></div>`;
+    h += govSelect('Governorate','location',true);
+    h += fldIcon('Area / City', 'area', 'pin', 'text', 'e.g. Nasr City, Tanta', '');
+    h += `<div class="two-col" style="gap:12px">
+      <div class="field has-icon"><label>Password</label><span class="ficon">${icon('lock', 16)}</span><input name="password" type="password" placeholder="Enter your password" required minlength="6"/></div>
+      <div class="field has-icon"><label>Confirm Password</label><span class="ficon">${icon('lock', 16)}</span><input name="confirm" type="password" placeholder="Repeat your password" required/></div></div>`;
+  } else {
+    h += fldIcon('Email or Name', 'email', 'mail', 'text', 'admin@zerohunger.local', 'required');
+    h += fldIcon('Password', 'password', 'lock', 'password', 'Enter your password', 'required');
+  }
+  $('#authFields').innerHTML = h;
+  $('#authSubmitText').textContent = authMode === 'login' ? 'Login' : 'Create Account';
+  $('#authTitle').textContent = authMode === 'login' ? `Welcome back, ${t.label}` : `Register as ${t.label}`;
+  $('#authSub').textContent = authMode === 'login'
+    ? 'Sign in to manage donations, track impact and help end hunger.'
+    : 'Fill in your details to join the Zero Hunger platform.';
+  $('#authFoot').innerHTML = authMode === 'login'
+    ? `Don't have an account? <a id="switchReg">Register here</a>`
+    : `Already have an account? <a id="switchLog">Login here</a>`;
+  const sr = $('#switchReg'); if (sr) sr.onclick = () => setAuthMode('register');
+  const sl = $('#switchLog'); if (sl) sl.onclick = () => setAuthMode('login');
+}
+function setAuthMode(m) {
+  authMode = m;
+  $('#tabLogin').classList.toggle('active', m === 'login');
+  $('#tabRegister').classList.toggle('active', m === 'register');
+  renderAuthFields();
+}
+$('#tabLogin').onclick = () => setAuthMode('login');
+$('#tabRegister').onclick = () => setAuthMode('register');
+
+$('#authForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const get = k => (fd.get(k) || '').toString().trim();
+  try {
+    if (authMode === 'register') {
+      if (get('password') !== get('confirm')) { toast('Passwords do not match.', 'err'); return; }
+      await api('/register', { method: 'POST', body: {
+        name: get('name'), phone: get('phone'), email: get('email'),
+        location: get('location'), area: get('area'), password: get('password'), type: authType
+      }});
+    } else {
+      await api('/login', { method: 'POST', body: {
+        email: get('email') || get('name'), password: get('password'), type: authType
+      }});
+    }
+    toast(`Welcome, ${USER.name}!`);
+    enterApp();
+  } catch (err) {
+    toast(err.message || 'Could not sign in. Is the server running?', 'err');
+  }
+});
+function logout() {
+  try { api('/logout', { method: 'POST' }); } catch (e) {}
+  try { localStorage.removeItem(LS_USER); localStorage.removeItem(LS_TOKEN); } catch (e) {}
+  USER = null; TOKEN = '';
+  $('#appView').classList.remove('on');
+  $('#authView').style.display = 'grid';
+  location.hash = '';
+}
+
+/* ================= APP SHELL ================= */
+const MENU = [
+  { id: 'dashboard',    label: 'Dashboard',    icon: 'dashboard', sec: 'MAIN MENU' },
+  { id: 'hotels',       label: 'Hotels',       icon: 'hotel' },
+  { id: 'restaurants',  label: 'Restaurants',  icon: 'restaurant' },
+  { id: 'charities',    label: 'Charity Organisation', icon: 'charity' },
+  { id: 'donate',       label: 'Donate',       icon: 'donate' },
+  { id: 'promotions',    label: 'Ads & Offers',  icon: 'megaphone' },
+  { id: 'ads',          label: 'AD Here',      icon: 'megaphone' },
+  { id: 'admin',        label: 'Admin Ads',    icon: 'settings', admin: true },
+  { id: 'notifications',label: 'Notifications',icon: 'bell', sec: 'OTHER', badge: true },
+  { id: 'settings',     label: 'Settings',     icon: 'settings' }
+];
+function visibleMenu() {
+  return MENU.filter(m => {
+    if (m.admin) return isAdmin();
+    return canSee(m.id);
+  });
+}
+function renderSidebar(active) {
+  let h = '', lastSec = null;
+  visibleMenu().forEach(m => {
+    if (m.sec && m.sec !== lastSec) { h += `<div class="sb-label">${m.sec}</div>`; lastSec = m.sec; }
+    const badge = m.badge && stats().unread > 0 ? `<span class="sb-badge">${stats().unread}</span>` : '';
+    h += `<button class="sb-item ${m.id === active ? 'active' : ''}" data-nav="${m.id}">${icon(m.icon, 20)}<span>${m.label}</span>${badge}</button>`;
+  });
+  $('#sbMenu').innerHTML = h;
+  $$('#sbMenu [data-nav]').forEach(b => b.onclick = () => navigate(b.dataset.nav));
+}
+function navigate(r) { location.hash = '#/' + r; }
+function currentRoute() {
+  const h = (location.hash || '').replace(/^#\//, '');
+  const allowed = visibleMenu().map(m => m.id);
+  if (allowed.includes(h)) return h;
+  return 'dashboard';
+}
+function applyTheme() {
+  document.documentElement.dataset.theme = DB.theme;
+  $('#themeIconMoon').style.display = DB.theme === 'light' ? 'block' : 'none';
+  $('#themeIconSun').style.display = DB.theme === 'dark' ? 'block' : 'none';
+  const sw = $('#prefDark'); if (sw) sw.checked = DB.theme === 'dark';
+}
+$('#btnTheme').onclick = () => {
+  DB.theme = DB.theme === 'light' ? 'dark' : 'light'; save(); applyTheme();
+  api('/theme', { method: 'POST', body: { theme: DB.theme } }).catch(() => {});
+};
+$('#btnBell').onclick = () => navigate('notifications');
+$('#btnHamburger').onclick = () => { $('#sidebar').classList.toggle('open'); $('#sbOverlay').classList.toggle('on'); };
+$('#sbOverlay').onclick = () => { $('#sidebar').classList.remove('open'); $('#sbOverlay').classList.remove('on'); };
+$('#profileChip').onclick = e => { e.stopPropagation(); $('#profileDropdown').classList.toggle('open'); };
+document.addEventListener('click', () => $('#profileDropdown').classList.remove('open'));
+$('#ddProfile').onclick = e => { e.stopPropagation(); $('#profileDropdown').classList.remove('open'); navigate('settings'); };
+$('#ddLogout').onclick = e => { e.stopPropagation(); $('#profileDropdown').classList.remove('open'); logout(); };
+
+async function enterApp() {
+  $('#authView').style.display = 'none';
+  $('#appView').classList.add('on');
+  if (TOKEN) { try { await refreshState(); } catch (e) {} }
+  const t = ACCOUNT_TYPES.find(x => x.id === USER.type) || (USER.type === 'admin' ? {label:'Admin'} : ACCOUNT_TYPES[3]);
+  $('#tbName').textContent = USER.name;
+  $('#tbType').textContent = t.label || USER.type;
+  $('#tbAvatar').textContent = (USER.name || 'U').trim().charAt(0).toUpperCase();
+  applyTheme(); updateBell(); restoreAvatar();
+  if (!location.hash) location.hash = '#/dashboard';
+  renderApp();
+  applyLanguage();
+}
+function renderApp() {
+  if (!USER) return;
+  const r = currentRoute();
+  renderSidebar(r);
+  $('#globalSearch').value = '';
+  const R = { dashboard: pageDashboard, hotels: pageHotels, restaurants: pageRestaurants,
+    charities: pageCharities, donate: () => pageDonorList('donor'), promotions: pagePromotions, ads: pageAds,
+    admin: pageAdminAds, notifications: pageNotifications, settings: pageSettings };
+  (R[r] || pageDashboard)();
+  $('#sidebar').classList.remove('open'); $('#sbOverlay').classList.remove('on');
+  window.scrollTo({ top: 0 });
+  applyLanguage();
+}
+window.addEventListener('hashchange', () => { if (USER) renderApp(); });
+
+/* ---------- global search ---------- */
+let searchTerm = '';
+$('#globalSearch').addEventListener('input', e => {
+  searchTerm = e.target.value.toLowerCase();
+  const r = currentRoute();
+  if (['hotels', 'restaurants', 'donate', 'charities', 'promotions'].includes(r)) renderApp();
+  if (r === 'dashboard') renderApp();
+});
+const matches = d => !searchTerm || [d.donorName, d.foodType, d.location].join(' ').toLowerCase().includes(searchTerm);
+
+/* ---------- shared: donation submission ---------- */
+async function addDonation(d) {
+  try {
+    await api('/donations', { method: 'POST', body: {
+      donorName: d.donorName, source: d.source, foodType: d.foodType,
+      quantity: parseInt(d.quantity) || 0, date: d.date || todayISO(), expiry: d.expiry,
+      location: d.location, area: d.area || '', phone: d.phone || '', notes: d.notes || '',
+      image: d.image || ''
+    }});
+    toast('Donation submitted successfully.');
+  } catch (err) {
+    const rec = {
+      id: uid(), donorName: d.donorName, source: d.source, foodType: d.foodType,
+      quantity: parseInt(d.quantity) || 0, date: d.date || todayISO(), expiry: d.expiry,
+      location: d.location, area: d.area || '', phone: d.phone || '', notes: d.notes || '',
+      image: d.image || '', status: 'Pending', createdAt: Date.now()
+    };
+    DB.donations.unshift(rec);
+    if (rec.source === 'restaurant' && !DB.restaurants.includes(rec.donorName)) DB.restaurants.push(rec.donorName);
+    if (rec.source === 'hotel' && !DB.hotels.includes(rec.donorName)) DB.hotels.push(rec.donorName);
+    if (rec.source === 'restaurant' || rec.source === 'hotel') {
+      ensurePartner(rec.donorName, rec.source === 'hotel' ? 'Hotel' : 'Restaurant', rec.phone, rec.location);
+    }
+    save();
+    notify(`New donation from ${rec.donorName}: ${rec.quantity} meals (${rec.foodType})`, 'donate');
+    toast(API_ONLINE ? (err.message || 'Saved locally') : 'Saved on this device (server offline).');
+  }
+}
+function donationFormHTML(source) {
+  const isRest = source === 'restaurant', isHotel = source === 'hotel';
+  const nameLabel = isRest ? 'Restaurant Name' : isHotel ? 'Hotel Name' : 'Donor Name';
+  const namePh = isRest ? 'Enter restaurant name' : isHotel ? 'Enter hotel name' : 'Enter your name';
+  const preName = USER && ((isRest && USER.type==='restaurant') || (isHotel && USER.type==='hotel') || (!isRest && !isHotel)) ? esc(USER.name) : '';
+  return `<form novalidate>
+    <div class="form-grid">
+      ${fldIcon(nameLabel, 'donorName', isHotel ? 'hotel' : isRest ? 'restaurant' : 'heart', 'text', namePh, `required value="${preName}"`)}
+      ${selFld('Food Type', 'foodType', FOOD_TYPES, 'Select food type', 'required')}
+      ${fldIcon('Quantity of Meals', 'quantity', 'meal', 'number', 'Enter quantity', 'required min="1"')}
+      ${fldIcon('Donation Date', 'date', 'calendar', 'date', '', `required value="${todayISO()}"`)}
+      ${fldIcon('Expiry Time', 'expiry', 'clock', 'time', '', 'required')}
+      ${govSelect('Governorate','location',true)}
+      ${fldIcon('Area / City', 'area', 'pin', 'text', 'Neighbourhood or street', '')}
+      ${fldIcon('Phone Number', 'phone', 'phone', 'tel', '+20 10 12345678', 'required')}
+      <div class="field"><label>Photo of the food (optional)</label><input name="imageFile" type="file" accept="image/*"/></div>
+      <div class="field span2 full" style="grid-column:1/-1"><label>Notes (Optional)</label><textarea name="notes" placeholder="Any extra information about the food..."></textarea></div>
+    </div></form>`;
+}
+async function readImageInput(root=document) {
+  const fileEl = root.querySelector('[name=imageFile]');
+  if (!fileEl || !fileEl.files || !fileEl.files[0]) return '';
+  const file = fileEl.files[0];
+  const dataUrl = await new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+  try {
+    const up = await api('/upload', { method: 'POST', body: { dataUrl } });
+    return up.url || dataUrl;
+  } catch (e) {
+    return dataUrl;
+  }
+}
+function openDonationModal(source) {
+  const title = source === 'restaurant' ? 'Enter Restaurant Donation' : source === 'hotel' ? 'Enter Hotel Donation' : 'Add Food Donation';
+  openModal(title, donationFormHTML(source), {
+    submitLabel: 'Submit Donation',
+    onSubmit: async d => {
+      d.image = await readImageInput($('#modalBody'));
+      await addDonation(Object.assign(d, { source }));
+      closeModal(); renderApp();
+    }
+  });
+}
+
+/* ================= DASHBOARD ================= */
+function pageDashboard() {
+  const s = stats();
+  const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+  let ranks = donationRankings();
+  let offers = offerRankings();
+  if (dashFilters.gov !== 'All') {
+    ranks = ranks.filter(r => normGov(r.location) === normGov(dashFilters.gov));
+    offers = offers.filter(r => normGov(r.location) === normGov(dashFilters.gov));
+  }
+  if (dashFilters.kind !== 'All') {
+    ranks = ranks.filter(r => r.type === dashFilters.kind);
+    offers = offers.filter(r => r.type === dashFilters.kind);
+  }
+  const topDonors = ranks.slice(0,8);
+  const topOffers = offers.slice(0,8);
+  const featuredOffers = (DB.offers||[]).filter(o => o.featured).slice(0,3);
+  const featuredAds = (DB.ads||[]).filter(a => a.featured && a.status === 'active').slice(0,3);
+  const byGov = EGYPT_GOVERNORATES.map(g => ({gov:g, count:DB.donations.filter(d=>normGov(d.location)===normGov(g)).length, meals:DB.donations.filter(d=>normGov(d.location)===normGov(g)).reduce((a,d)=>a+(parseInt(d.quantity)||0),0)})).sort((a,b)=>b.meals-a.meals||b.count-a.count);
+  const kpi = (label,val,ic,tone,sub) => `<div class="card kpi"><div class="kpi-top"><span class="kpi-label">${label}</span><span class="kpi-icon tone-${tone}">${icon(ic,22)}</span></div><div class="kpi-val">${Number(val||0).toLocaleString()}</div><div class="kpi-trend">${sub}</div></div>`;
+  const rankRows = topDonors.length ? topDonors.map((r,i)=>`<tr><td><b>#${i+1}</b></td><td><div class="cell-main">${esc(r.name)}</div><div class="cell-sub">${r.type}</div></td><td>${r.donations}</td><td><b>${r.meals.toLocaleString()}</b> meals</td><td>${esc(r.location||'—')}</td><td>${r.phone ? `<a href="tel:${esc(r.phone)}" class="badge b-info">${icon('phone',12)} ${esc(r.phone)}</a>` : '—'}</td></tr>`).join('') : `<tr><td colspan="6">${emptyState('gift','No donors yet','Donation rankings appear automatically when restaurants, hotels or donors submit food.')}</td></tr>`;
+  const offerRows = topOffers.length ? topOffers.map((r,i)=>`<tr><td><b>#${i+1}</b></td><td><div class="cell-main">${esc(r.title)}</div><div class="cell-sub">${esc(r.name)} • ${r.type}${r.audience ? ' • ' + esc(r.audience) : ''}</div></td><td><span class="badge b-active">${r.discount}% OFF</span></td><td>${esc(r.location||'—')}</td><td>${r.phone ? `<a href="tel:${esc(r.phone)}" class="badge b-info">${icon('phone',12)} ${esc(r.phone)}</a>` : '—'}</td></tr>`).join('') : `<tr><td colspan="5">${emptyState('gift','No offers yet','The strongest discounts appear here after restaurants and hotels publish offers.')}</td></tr>`;
+  const govRows = byGov.map((r,i)=>`<tr><td><b>${i+1}</b></td><td>${esc(r.gov)}</td><td>${r.count}</td><td><b>${r.meals.toLocaleString()}</b></td></tr>`).join('');
+  $('#pageContent').innerHTML = `
+    <div class="page-head"><div><h2>${icon('dashboard',26)} Dashboard</h2><p class="sub">Donation impact, leading donors, governorates and the best offers — saved in this file’s built-in database.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge b-active">🇪🇬 27 Governorates</span><span class="badge b-info">One HTML file</span></div></div>
+    <div class="toolbar" style="margin-bottom:16px">
+      <select id="dashGov"><option value="All">All governorates</option>${EGYPT_GOVERNORATES.map(g=>`<option ${dashFilters.gov===g?'selected':''}>${g}</option>`).join('')}</select>
+      <select id="dashKind">
+        <option value="All" ${dashFilters.kind==='All'?'selected':''}>All types</option>
+        <option value="Restaurant" ${dashFilters.kind==='Restaurant'?'selected':''}>Restaurants</option>
+        <option value="Hotel" ${dashFilters.kind==='Hotel'?'selected':''}>Hotels</option>
+        <option value="Donor" ${dashFilters.kind==='Donor'?'selected':''}>Donors</option>
+      </select>
+    </div>
+    ${featuredOffers.length || featuredAds.length ? `<div class="card" style="margin-bottom:16px"><div class="card-head"><h3><span class="ch-ic">${icon('megaphone',17)}</span>Featured placements</h3><span class="badge b-active">Premium</span></div><div class="two-col">${[...featuredOffers.map(o=>({t:o.title,n:o.restaurantName||o.hotelName,d:o.discount})),...featuredAds.map(a=>({t:a.title,n:a.business,d:a.discount}))].map(x=>`<div class="stat-mini"><span class="mi tone-orange">${icon('gift',20)}</span><div><b>${esc(x.t)}</b><span>${esc(x.n||'')} ${x.d?('• '+x.d+'% OFF'):''}</span></div></div>`).join('')}</div></div>` : ''}
+    <div class="kpi-grid">${kpi('Total Meals Shared',s.totalMeals,'meal','green','Updates with every donation')}}${kpi('Total Donations',s.totalDonations,'gift','rose','All submitted donations')}${kpi('Restaurants',s.activeRestaurants,'restaurant','purple','Registered partners')}${kpi('Hotels',s.activeHotels,'hotel','teal','Registered partners')}${kpi('Charities',s.charities,'charity','orange','Registered organisations')}${kpi('Active Offers',s.activeOffers,'gift','blue','Current business offers')}</div>
+    <div class="card" style="margin-bottom:16px"><div class="card-head"><h3><span class="ch-ic">${icon('gift',17)}</span>Dashboard 1 — Donation Leaders</h3><span class="badge b-info">Restaurants + Hotels + Individual Donors</span></div><p class="sub" style="margin-bottom:14px">Who has the highest number of donations and meals shared.</p><div class="table-wrap"><table class="resp"><thead><tr><th>Rank</th><th>Contributor</th><th>Donations</th><th>Meals</th><th>Governorate</th><th>Phone</th></tr></thead><tbody>${rankRows}</tbody></table></div></div>
+    <div class="grid-2" style="align-items:start"><div class="card"><div class="card-head"><h3><span class="ch-ic">${icon('pin',17)}</span>Donation by Governorate</h3><span class="badge b-active">27 Governorates</span></div><div class="table-wrap"><table class="resp"><thead><tr><th>#</th><th>Governorate</th><th>Donations</th><th>Meals</th></tr></thead><tbody>${govRows}</tbody></table></div></div><div class="card"><div class="card-head"><h3><span class="ch-ic">${icon('gift',17)}</span>Top Governorates</h3></div>${byGov.slice(0,6).map((r,i)=>`<div class="hbar-row"><span class="hl">${esc(r.gov)}</span><div class="hbar-track"><div class="hbar-fill" style="width:${Math.max(3,(r.meals/(byGov[0].meals||1))*100)}%"></div></div><b>${r.meals}</b></div>`).join('')||emptyState('pin','No location data','Add a governorate to donations to start the ranking.')}</div></div>
+    <div class="card" style="margin-top:16px"><div class="card-head"><h3><span class="ch-ic">${icon('gift',17)}</span>Dashboard 2 — Best Offers</h3><span class="badge b-active">Highest discount first</span></div><p class="sub" style="margin-bottom:14px">Restaurant meal discounts and hotel night / stay offers are ranked by the strongest discount. Phone numbers are shown so charities and users can call directly.</p><div class="table-wrap"><table class="resp"><thead><tr><th>Rank</th><th>Offer</th><th>Discount</th><th>Governorate</th><th>Phone</th></tr></thead><tbody>${offerRows}</tbody></table></div></div>
+    <div class="grid-2"><div class="card"><div class="card-head"><h3><span class="ch-ic">${icon('donate',17)}</span>Donation Trends</h3><select class="pill-select" id="dashRange"><option>Last 6 Months</option><option>Last 12 Months</option></select></div><div id="trendChart">${trendChartHTML(6)}</div></div><div class="card"><div class="card-head"><h3><span class="ch-ic">${icon('meal',17)}</span>Food Type Distribution</h3></div><div id="donutWrap">${donutHTML()}</div></div></div>
+    <div class="card" style="margin-top:16px"><div class="card-head"><h3><span class="ch-ic">${icon('gift',17)}</span>Recent Donations</h3><button class="btn btn-outline btn-sm" id="viewAllDon">${icon('eye',14)} View All</button></div><div id="recentDon">${recentTableHTML(DB.donations.filter(matches).slice(0,8))}</div></div>
+    <div class="banner" style="margin-top:20px">${icon('leaf',20)} Rankings are calculated from submitted donations and published offers. No fixed fake leaderboard numbers.</div>`;
+  const vr=$('#viewAllDon'); if(vr)vr.onclick=()=>navigate('donate'); const dr=$('#dashRange'); if(dr)dr.onchange=()=>{$('#trendChart').innerHTML=trendChartHTML(dr.value.includes('12')?12:6)};
+  const dg=$('#dashGov'); if(dg) dg.onchange=e=>{dashFilters.gov=e.target.value; renderApp();};
+  const dk=$('#dashKind'); if(dk) dk.onchange=e=>{dashFilters.kind=e.target.value; renderApp();};
+}
+
+function lastMonths(n) {
+  const out = [], now = new Date();
+  for (let i = n - 1; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); out.push({ key: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'), label: monthsShort[d.getMonth()] }); }
+  return out;
+}
+function trendChartHTML(n) {
+  const months = lastMonths(n);
+  const monthKey=d=>{const c=d.createdAt; if(typeof c==='number') return new Date(c).toISOString().slice(0,7); if(c) return String(c).slice(0,7); return String(d.date||'').slice(0,7);}; const counts = months.map(m => DB.donations.filter(d => monthKey(d) === m.key).length);
+  const max = Math.max(...counts, 1);
+  if (!DB.donations.length) return `<div class="chart-empty">No donation data yet — charts update as donations arrive.</div>`;
+  return `<div class="bar-chart">${months.map((m, i) =>
+    `<div class="bar-col"><span class="bar-val">${counts[i]}</span><div class="bar" style="height:${Math.max(4, (counts[i] / max) * 100)}%" title="${counts[i]} donation(s)"></div><span class="bar-x">${m.label}</span></div>`).join('')}</div>`;
+}
+function donutHTML() {
+  if (!DB.donations.length) return `<div class="chart-empty">No data yet.</div>`;
+  const byType = {}; let total = 0;
+  DB.donations.forEach(d => { byType[d.foodType] = (byType[d.foodType] || 0) + d.quantity; total += d.quantity; });
+  let acc = 0; const segs = Object.entries(byType).map(([t, v]) => { const from = acc; acc += (v / total) * 100; return `${FT_COLORS[t] || '#94a3a0'} ${from}% ${acc}%`; });
+  return `<div class="donut-wrap"><div class="donut" style="background:conic-gradient(${segs.join(',')})"><div class="donut-center"><b>${total}</b><span>meals</span></div></div>
+    <div class="legend">${Object.entries(byType).map(([t, v]) =>
+      `<div class="legend-row"><span class="sw" style="background:${FT_COLORS[t] || '#94a3a0'}"></span>${esc(t)}<b>${Math.round((v / total) * 100)}%</b></div>`).join('')}</div></div>`;
+}
+function sourceChartHTML() {
+  const h = DB.donations.filter(d => d.source === 'hotel').length;
+  const o = DB.donations.filter(d => d.source === 'donor').length;
+  if (!DB.donations.length) return `<div class="chart-empty">No hotel or individual donations yet.</div>`;
+  const max = Math.max(h, o, 1);
+  const row = (label, v, color) => `<div class="hbar-row"><span class="hl">${label}</span><div class="hbar-track"><div class="hbar-fill" style="width:${(v / max) * 100}%;background:${color}"></div></div><b>${v}</b></div>`;
+  return row('Hotels', h, '#0e9488') + row('Individual Donors', o, '#7c3aed');
+}
+function monthlyChartHTML() {
+  if (!DB.donations.length) return `<div class="chart-empty">Monthly statistics appear after your first donation.</div>`;
+  const months = lastMonths(6);
+  const vals = months.map(m => DB.donations.filter(d => (d.createdAt || '').slice(0, 7) === m.key).reduce((a, d) => a + d.quantity, 0));
+  const max = Math.max(...vals, 1), W = 560, H = 170, P = 26;
+  const px = i => P + i * ((W - 2 * P) / (months.length - 1));
+  const py = v => H - P - (v / max) * (H - 2 * P);
+  const pts = vals.map((v, i) => `${px(i)},${py(v)}`).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%">
+    ${[0, .5, 1].map(f => `<line x1="${P}" x2="${W - P}" y1="${py(max * f)}" y2="${py(max * f)}" stroke="var(--border)" stroke-dasharray="4 4"/>`).join('')}
+    <polygon points="${P},${H - P} ${pts} ${W - P},${H - P}" fill="rgba(22,163,74,.12)"/>
+    <polyline points="${pts}" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    ${vals.map((v, i) => `<circle cx="${px(i)}" cy="${py(v)}" r="4.5" fill="#fff" stroke="#16a34a" stroke-width="2.5"/><text x="${px(i)}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--muted)" font-weight="600">${months[i].label}</text><text x="${px(i)}" y="${py(v) - 10}" text-anchor="middle" font-size="10.5" fill="var(--text)" font-weight="700">${v}</text>`).join('')}
+  </svg>`;
+}
+function recentTableHTML(list) {
+  if (!list.length) return emptyState('doc', 'No donations yet', 'When donations are added from the Restaurants, Hotels or Donate pages, they will appear here.');
+  return `<div class="table-wrap"><table class="resp"><thead><tr>
+    <th>Restaurants &amp; Hotels</th><th>Food Type</th><th>Quantity</th><th>Donation Date</th><th>Expiry Time</th><th>Location</th><th>Status</th></tr></thead>
+    <tbody>${list.map(d => `<tr>
+      <td data-label="Donor"><div class="cell-main">${esc(d.donorName)}</div><div class="cell-sub">${d.source === 'restaurant' ? 'Restaurant' : d.source === 'hotel' ? 'Hotel' : 'Donor'}</div></td>
+      <td data-label="Food Type">${esc(d.foodType)}</td>
+      <td data-label="Quantity"><b>${d.quantity}</b> meals</td>
+      <td data-label="Donation Date">${fmtDate(d.date)}</td>
+      <td data-label="Expiry Time">${esc(d.expiry || '—')}</td>
+      <td data-label="Location">${esc(d.location)}</td>
+      <td data-label="Status"><span class="badge ${d.status === 'Received' ? 'b-active' : 'b-pending'}">${d.status}</span></td></tr>`).join('')}</tbody></table></div>`;
+}
+</script>
+
+<script>
+/* ================= RESTAURANT OFFERS ================= */
+function pageRestaurants() {
+  const offers = DB.offers.filter(o => !searchTerm || [o.restaurantName, o.title, o.location, o.audience].join(' ').toLowerCase().includes(searchTerm));
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon('restaurant', 27)} Restaurants</h2><p class="sub">Restaurants can promote offers for regular customers and special discounts for charity organisations.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" id="restDonate">${icon('plus',17)} Enter Donation</button>
+        <button class="btn btn-primary" id="addOffer">${icon('plus',17)} Add Offer</button>
+      </div>
+    </div>
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Registered Restaurants</span><span class="kpi-icon tone-purple">${icon('restaurant',22)}</span></div><div class="kpi-val">${DB.restaurants.length}</div><div class="kpi-trend">Business partners</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Active Offers</span><span class="kpi-icon tone-green">${icon('gift',22)}</span></div><div class="kpi-val">${DB.offers.length}</div><div class="kpi-trend">Updated from real entries</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Charity Offers</span><span class="kpi-icon tone-orange">${icon('charity',22)}</span></div><div class="kpi-val">${DB.offers.filter(o=>o.audience==='Charity Organisations').length}</div><div class="kpi-trend">Special community support</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3><span class="ch-ic">${icon('megaphone',17)}</span>Restaurant Offers</h3>
+        <div class="toolbar" style="margin:0"><div class="search-wrap"><input id="offerSearch" placeholder="Search restaurant offers..." value="${esc(searchTerm)}"/></div></div>
+      </div>
+      ${offers.length ? `<div class="two-col">${offers.map(o => `
+        <div class="stat-mini" style="align-items:flex-start">
+          <span class="mi tone-green">${icon('gift',20)}</span>
+          <div style="flex:1"><b>${esc(o.title)}</b><span>${esc(o.restaurantName)} • ${esc(o.location)}</span>
+            <div style="margin-top:7px;display:flex;gap:7px;flex-wrap:wrap"><span class="badge b-active">${esc(o.discount)}% OFF</span><span class="badge b-info">${esc(o.audience)}</span></div>
+            <p style="margin-top:8px;font-size:12px;color:var(--muted)">${esc(o.description || '')}</p>
+          </div>
+        </div>`).join('')}</div>` : emptyState('restaurant','No restaurant offers yet','Add an offer to make it visible to customers and charity organisations.')}
+    </div>
+    <div class="banner">${icon('heart',20)} Restaurants can publish discounts and also donate surplus meals. Both appear on the live dashboards.</div>`;
+  $('#restDonate').onclick = () => openDonationModal('restaurant');
+  $('#addOffer').onclick = () => openModal('Add Restaurant Offer', `<form novalidate><div class="form-grid">
+    ${fldIcon('Restaurant Name','restaurantName','restaurant','text','Enter restaurant name','required')}
+    ${fldIcon('Offer Title','title','gift','text','e.g. Family Meal Discount','required')}
+    ${fldIcon('Discount %','discount','gift','number','15','required min="1" max="100"')}
+    ${selFld('Audience','audience',['Regular Customers','Charity Organisations','Both'],'Select audience','required')}
+    ${govSelect('Governorate','location',true)}
+    ${fldIcon('Phone Number','phone','phone','tel','+20 10 12345678','required')}
+    ${fldIcon('Valid Until','validUntil','calendar','date','',`required value="${todayISO()}"`)}
+    <div class="field full" style="grid-column:1/-1"><label>Description</label><textarea name="description" placeholder="Describe the offer and conditions..."></textarea></div>
+  </div></form>`, {submitLabel:'Publish Offer', onSubmit: async d=>{
+    d.businessType='Restaurant';
+    try { await api('/offers', { method:'POST', body:d }); }
+    catch(e){
+      const rec={id:uid(), businessType:'Restaurant', restaurantName:d.restaurantName, title:d.title, discount:parseInt(d.discount)||0, audience:d.audience, location:d.location, phone:d.phone||'', validUntil:d.validUntil, description:d.description||'', featured:false, views:0, clicks:0, createdAt:Date.now()};
+      DB.offers.unshift(rec); if(!DB.restaurants.includes(rec.restaurantName)) DB.restaurants.push(rec.restaurantName); ensurePartner(rec.restaurantName,'Restaurant',rec.phone,rec.location); save();
+    }
+    toast('Restaurant offer published successfully.'); closeModal(); renderApp();
+  }});
+  $('#offerSearch').oninput=e=>{searchTerm=e.target.value.toLowerCase();renderApp();const x=$('#offerSearch');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}};
+}
+
+/* ================= HOTELS (donations + night offers) ================= */
+function pageHotels() {
+  const hotelOffers = DB.offers.filter(o => o.businessType === 'Hotel' && (!searchTerm || [o.hotelName,o.restaurantName,o.title,o.location].join(' ').toLowerCase().includes(searchTerm)));
+  const all = DB.donations.filter(d => d.source === 'hotel' && matches(d));
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon('hotel',27)} Hotels</h2><p class="sub">Hotels can donate surplus meals and publish night / stay discounts for guests and charity partners.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" id="addHotelOffer">${icon('plus',17)} Add Hotel Offer</button>
+        <button class="btn btn-primary" id="enterDonation">${icon('plus',17)} Enter Donation</button>
+      </div>
+    </div>
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Registered Hotels</span><span class="kpi-icon tone-teal">${icon('hotel',22)}</span></div><div class="kpi-val">${DB.hotels.length}</div><div class="kpi-trend">Business partners</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Hotel Donations</span><span class="kpi-icon tone-green">${icon('donate',22)}</span></div><div class="kpi-val">${all.length}</div><div class="kpi-trend">Surplus meals shared</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Night / Stay Offers</span><span class="kpi-icon tone-orange">${icon('gift',22)}</span></div><div class="kpi-val">${hotelOffers.length}</div><div class="kpi-trend">Ranked on Dashboard 2</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head"><h3><span class="ch-ic">${icon('gift',17)}</span>Hotel Offers (nights & stays)</h3></div>
+      ${hotelOffers.length ? `<div class="two-col">${hotelOffers.map(o => `
+        <div class="stat-mini" style="align-items:flex-start">
+          <span class="mi tone-teal">${icon('hotel',20)}</span>
+          <div style="flex:1"><b>${esc(o.title)}</b><span>${esc(o.hotelName || o.restaurantName)} • ${esc(o.location)}</span>
+            <div style="margin-top:7px;display:flex;gap:7px;flex-wrap:wrap"><span class="badge b-active">${esc(o.discount)}% OFF</span><span class="badge b-info">${esc(o.audience||'Guests')}</span>${o.phone?`<a href="tel:${esc(o.phone)}" class="badge b-info">${icon('phone',12)} ${esc(o.phone)}</a>`:''}</div>
+            <p style="margin-top:8px;font-size:12px;color:var(--muted)">${esc(o.description || '')}</p>
+          </div>
+        </div>`).join('')}</div>` : emptyState('hotel','No hotel offers yet','Publish a night or stay discount. The highest discount appears first on Dashboard 2.')}
+    </div>
+    <div class="grid-2" style="grid-template-columns:1.9fr 1fr">
+      <div class="card">
+        <div class="card-head"><h3><span class="ch-ic">${icon('hotel',17)}</span>Enter Hotel Donation</h3></div>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Share surplus meals with verified charities across Egypt’s 27 governorates.</p>
+        ${donationFormHTML('hotel').replace('<form novalidate>', `<form id="inlineDonForm" novalidate>`)}
+        <div style="display:flex;justify-content:flex-end;margin-top:16px">
+          <button class="btn btn-primary" id="inlineSubmit" type="button">${icon('send',15)} Submit Donation</button>
+        </div>
+      </div>
+      <div class="side-illu">
+        <div class="illu-ic">${icon('hotel',36)}</div>
+        <h3>Hotels reduce waste</h3>
+        <p>Donate extra meals and offer fair night rates. Charities in the same governorate will see your phone number.</p>
+        <span class="badge b-active">${icon('leaf',13)} Less waste • More hope</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-head"><h3><span class="ch-ic">${icon('building',17)}</span>Hotel Food Donations</h3></div>
+      <div class="table-wrap"><table class="resp"><thead><tr>
+        <th>Hotel Name</th><th>Food Type</th><th>Quantity</th><th>Donation Date</th><th>Expiry Time</th><th>Governorate</th><th>Phone</th><th>Status</th></tr></thead>
+        <tbody>${all.length ? all.map(d => `<tr>
+          <td data-label="Hotel"><div class="cell-main">${esc(d.donorName)}</div></td>
+          <td data-label="Food Type">${esc(d.foodType)}</td>
+          <td data-label="Quantity"><b>${d.quantity}</b> meals</td>
+          <td data-label="Donation Date">${fmtDate(d.date)}</td>
+          <td data-label="Expiry Time">${esc(d.expiry || '—')}</td>
+          <td data-label="Location">${esc(d.location)}</td>
+          <td data-label="Phone">${d.phone ? `<a href="tel:${esc(d.phone)}" class="badge b-info">${esc(d.phone)}</a>` : '—'}</td>
+          <td data-label="Status"><span class="badge ${d.status === 'Received' ? 'b-active' : 'b-pending'}">${d.status}</span></td></tr>`).join('')
+        : `<tr><td colspan="8">${emptyState('hotel','No hotel donations yet','When hotels submit surplus meals, they appear here and on Dashboard 1.')}</td></tr>`}
+        </tbody></table></div>
+    </div>
+    <div class="banner" style="margin-top:20px">${icon('leaf',20)} Hotel night discounts and food donations both update the live dashboards. No fake ranking numbers.</div>`;
+  const submitInline = async () => {
+    const form = $('#inlineDonForm');
+    if (!form.reportValidity()) return;
+    const data = {}; $$('#inlineDonForm [name]').forEach(el => { if (el.type !== 'file') data[el.name] = el.value.trim(); });
+    data.image = await readImageInput(form);
+    await addDonation(Object.assign(data, { source: 'hotel' }));
+    renderApp();
+  };
+  $('#inlineSubmit').onclick = submitInline;
+  $('#inlineDonForm').addEventListener('submit', e => { e.preventDefault(); submitInline(); });
+  $('#enterDonation').onclick = () => openDonationModal('hotel');
+  $('#addHotelOffer').onclick = () => openModal('Add Hotel Offer', `<form novalidate><div class="form-grid">
+    ${fldIcon('Hotel Name','hotelName','hotel','text','Enter hotel name','required')}
+    ${fldIcon('Offer Title','title','gift','text','e.g. 40% off one night','required')}
+    ${fldIcon('Discount %','discount','gift','number','40','required min="1" max="100"')}
+    ${selFld('Offer Type','audience',['Night Stay','Room Rate','Weekend Package','Charity Partner Rate','Both Guests & Charities'],'Select type','required')}
+    ${govSelect('Governorate','location',true)}
+    ${fldIcon('Phone Number','phone','phone','tel','+20 10 12345678','required')}
+    ${fldIcon('Valid Until','validUntil','calendar','date','',`required value="${todayISO()}"`)}
+    <div class="field full" style="grid-column:1/-1"><label>Description</label><textarea name="description" placeholder="Describe the night/stay offer..."></textarea></div>
+  </div></form>`, {submitLabel:'Publish Hotel Offer', onSubmit: async d=>{
+    d.businessType='Hotel'; d.restaurantName=d.hotelName;
+    try { await api('/offers', { method:'POST', body:d }); }
+    catch(e){
+      const rec={id:uid(), businessType:'Hotel', hotelName:d.hotelName, restaurantName:d.hotelName, title:d.title, discount:parseInt(d.discount)||0, audience:d.audience, location:d.location, phone:d.phone||'', validUntil:d.validUntil, description:d.description||'', featured:false, views:0, clicks:0, createdAt:Date.now()};
+      DB.offers.unshift(rec); if(!DB.hotels.includes(d.hotelName)) DB.hotels.push(d.hotelName); ensurePartner(d.hotelName,'Hotel',d.phone,d.location); save();
+    }
+    toast('Hotel offer published successfully.'); closeModal(); renderApp();
+  }});
+}
+
+/* ================= HOTELS / RESTAURANTS / DONATE ================= */
+let listFilters = { food: 'All', date: 'All' };
+let dashFilters = { gov: 'All', kind: 'All', period: 'all' };
+function pageDonorList(source) {
+  const isRest = source === 'restaurant', isHotel = source === 'hotel';
+  const title = isRest ? 'Restaurants' : isHotel ? 'Hotels' : 'Donate Food';
+  const ic = isRest ? 'restaurant' : isHotel ? 'hotel' : 'gift';
+  const sub = isRest ? 'Publish special offers and discounts for customers and charity organisations.'
+    : isHotel ? 'Help reduce food waste by donating extra meals from your hotel.'
+    : 'Share food directly and help people in need. Every meal makes a difference.';
+  const all = DB.donations.filter(d => d.source === source && matches(d));
+  const filtered = all.filter(d =>
+    (listFilters.food === 'All' || d.foodType === listFilters.food) &&
+    (listFilters.date === 'All' || d.date === listFilters.date));
+  const donors = (isRest ? DB.restaurants : isHotel ? DB.hotels : []).filter(n => !searchTerm || n.toLowerCase().includes(searchTerm));
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon(ic, 27)} ${title}</h2><p class="sub">${sub}</p></div>
+      <button class="btn btn-primary" id="enterDonation">${icon('plus', 17)} Enter Donation</button>
+    </div>
+    <div class="grid-2" style="grid-template-columns:1.9fr 1fr">
+      <div class="card">
+        <div class="card-head"><h3><span class="ch-ic">${icon(ic, 17)}</span>Enter Donation</h3></div>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Fill in the details below to submit your food donation.</p>
+        ${donationFormHTML(source).replace('<form novalidate>', `<form id="inlineDonForm" novalidate>`)}
+        <div style="display:flex;justify-content:flex-end;margin-top:16px">
+          <button class="btn btn-primary" id="inlineSubmit" type="button">${icon('send', 15)} Submit Donation</button>
+        </div>
+      </div>
+      <div class="side-illu">
+        <div class="illu-ic">${icon(isHotel ? 'hotel' : isRest ? 'restaurant' : 'heart', 36)}</div>
+        <h3>Your donation makes a difference</h3>
+        <p>Help us fight hunger and reduce food waste together.</p>
+        <span class="badge b-active">${icon('leaf', 13)} Less waste • More hope</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3><span class="ch-ic">${icon('building', 17)}</span>${isRest ? 'Donating Restaurants' : isHotel ? 'Donating Hotels' : 'Food Donations'}</h3>
+        <div class="toolbar" style="margin:0">
+          <div class="search-wrap"><span class="ficon" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)">${icon('search', 15)}</span>
+            <input id="listSearch" placeholder="${isRest ? 'Search restaurants...' : isHotel ? 'Search hotels...' : 'Search donations...'}" value="${esc(searchTerm)}" style="padding-left:38px"/></div>
+          <select id="filterFood"><option>All</option>${FOOD_TYPES.map(t => `<option ${listFilters.food === t ? 'selected' : ''}>${t}</option>`).join('')}</select>
+          <select id="filterDate"><option>All</option>${[...new Set(all.map(d => d.date))].sort().reverse().map(dt => `<option ${listFilters.date === dt ? 'selected' : ''}>${dt}</option>`).join('')}</select>
+        </div>
+      </div>
+      <div class="table-wrap"><table class="resp"><thead><tr>
+        <th>${isRest ? 'Restaurant Name' : isHotel ? 'Hotel Name' : 'Donor Name'}</th><th>Food Type</th><th>Quantity</th><th>Donation Date</th><th>Expiry Time</th><th>Location</th><th>Status</th></tr></thead>
+        <tbody id="donorRows">${filtered.length ? filtered.map(d => `<tr>
+          <td data-label="Name"><div class="cell-main">${esc(d.donorName)}</div></td>
+          <td data-label="Food Type">${esc(d.foodType)}</td>
+          <td data-label="Quantity"><b>${d.quantity}</b> meals</td>
+          <td data-label="Donation Date">${fmtDate(d.date)}</td>
+          <td data-label="Expiry Time">${esc(d.expiry || '—')}</td>
+          <td data-label="Location">${esc(d.location)}</td>
+          <td data-label="Status"><span class="badge ${d.status === 'Received' ? 'b-active' : 'b-pending'}">${d.status}</span></td></tr>`).join('')
+        : `<tr><td colspan="7">${emptyState(ic, isRest ? 'No donations yet' : isHotel ? 'No donations yet' : 'No donations yet', `When ${isRest ? 'restaurants' : isHotel ? 'hotels' : 'donors'} submit their donations, they will appear here.`)}</td></tr>`}
+        </tbody></table></div>
+      ${donors.length ? `<div style="margin-top:16px;border-top:1px dashed var(--border);padding-top:14px">
+        <p style="font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:10px">ACTIVE ${isRest ? 'RESTAURANTS' : 'HOTELS'} (${donors.length})</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">${donors.map(n => `<span class="badge b-info">${icon(isRest ? 'restaurant' : 'hotel', 13)} ${esc(n)}</span>`).join('')}</div></div>` : ''}
+    </div>
+    <div class="banner">${icon('leaf', 20)} Together we can end hunger — Less food waste • More food for those in need • A sustainable future</div>`;
+  const submitInline = async () => {
+    const form = $('#inlineDonForm');
+    if (!form.reportValidity()) return;
+    const data = {}; $$('#inlineDonForm [name]').forEach(el => { if (el.type !== 'file') data[el.name] = el.value.trim(); });
+    data.image = await readImageInput(form);
+    await addDonation(Object.assign(data, { source }));
+    renderApp();
+  };
+  $('#inlineSubmit').onclick = submitInline;
+  $('#inlineDonForm').addEventListener('submit', e => { e.preventDefault(); submitInline(); });
+  $('#enterDonation').onclick = () => openDonationModal(source);
+  $('#listSearch').addEventListener('input', e => { searchTerm = e.target.value.toLowerCase(); renderApp(); const si = $('#listSearch'); si.focus(); si.setSelectionRange(si.value.length, si.value.length); });
+  $('#filterFood').onchange = e => { listFilters.food = e.target.value; renderApp(); };
+  $('#filterDate').onchange = e => { listFilters.date = e.target.value; renderApp(); };
+}
+
+/* ================= CHARITY ORGANISATIONS ================= */
+let charityTab = 'organisations';
+function pageCharities() {
+  const s = stats();
+  const tabs = [
+    ['organisations', 'Organisations'], ['available', 'Available Donations'], ['received', 'Received Donations'],
+    ['requests', 'Donation Requests'], ['beneficiaries', 'Beneficiaries'], ['locations', 'Distribution Locations']
+  ];
+  let body = '';
+  const charityLocation = (USER && USER.location) || ''; const nearby = nearbyPartners(charityLocation);
+  if (charityTab === 'organisations') {
+    const orgs = DB.charities.filter(c => !searchTerm || c.name.toLowerCase().includes(searchTerm) || c.location.toLowerCase().includes(searchTerm));
+    body = orgs.length
+      ? `<div class="table-wrap"><table class="resp"><thead><tr><th>Organisation Name</th><th>Responsible Person</th><th>Contact</th><th>Location</th><th>Status</th></tr></thead><tbody>
+        ${orgs.map(c => `<tr><td data-label="Organisation"><div class="cell-main">${esc(c.name)}</div></td>
+          <td data-label="Responsible">${esc(c.person)}</td>
+          <td data-label="Contact"><div>${esc(c.phone)}</div><div class="cell-sub">${esc(c.email)}</div></td>
+          <td data-label="Location">${esc(c.location)}</td>
+          <td data-label="Status"><span class="badge b-active">Registered</span></td></tr>`).join('')}</tbody></table></div>`
+      : emptyState('charity', 'No organisations yet', 'When charity organisations register, they will appear here.');
+  } else if (charityTab === 'available') {
+    const avail = DB.donations.filter(d => (d.status === 'Pending' || d.status === 'Reserved') && matches(d));
+    body = avail.length ? `<div class="table-wrap"><table class="resp"><thead><tr><th>Donor</th><th>Food Type</th><th>Quantity</th><th>Expiry</th><th>Location</th><th>Contact</th><th>Status</th><th></th></tr></thead><tbody>
+      ${avail.map(d => `<tr><td data-label="Donor"><div class="cell-main">${esc(d.donorName)}</div><div class="cell-sub">${esc(d.area||d.source||'')}</div></td>
+        <td data-label="Food Type">${esc(d.foodType)}</td><td data-label="Quantity"><b>${d.quantity}</b> meals</td>
+        <td data-label="Expiry">${esc(d.expiry || '—')}</td><td data-label="Location">${esc(d.location)}${d.area?' · '+esc(d.area):''}</td><td data-label="Contact">${contactButtons(d.phone)}</td>
+        <td data-label="Status">${statusBadge(d.status)}</td>
+        <td data-label="Action">${d.status==='Pending'?`<button class="btn btn-outline btn-sm" data-status="${d.id}" data-next="Reserved">Reserve</button> <button class="btn btn-primary btn-sm" data-status="${d.id}" data-next="Received">${icon('check', 13)} Receive</button>`:`<button class="btn btn-primary btn-sm" data-status="${d.id}" data-next="Received">${icon('check', 13)} Mark received</button>`}</td></tr>`).join('')}</tbody></table></div>`
+      : emptyState('box', 'No available donations', 'Pending donations from restaurants, hotels and donors will appear here for charities to reserve or receive.');
+  } else if (charityTab === 'received') {
+    const rec = DB.donations.filter(d => (d.status === 'Received' || d.status === 'Distributed') && matches(d));
+    body = rec.length ? `<div class="table-wrap"><table class="resp"><thead><tr><th>Donor</th><th>Food Type</th><th>Quantity</th><th>Received On</th><th>Location</th><th>Status</th><th></th></tr></thead><tbody>
+      ${rec.map(d => `<tr><td data-label="Donor"><div class="cell-main">${esc(d.donorName)}</div></td>
+        <td data-label="Food Type">${esc(d.foodType)}</td><td data-label="Quantity"><b>${d.quantity}</b> meals</td>
+        <td data-label="Received">${fmtDate(d.date)}</td><td data-label="Location">${esc(d.location)}</td>
+        <td data-label="Status">${statusBadge(d.status)}</td>
+        <td data-label="Action">${d.status==='Received'?`<button class="btn btn-outline btn-sm" data-status="${d.id}" data-next="Distributed">Mark distributed</button>`:'—'}</td></tr>`).join('')}</tbody></table></div>`
+      : emptyState('truck', 'No received donations yet', 'Reserved then received donations appear here.');
+  } else if (charityTab === 'requests') {
+    const reqs = DB.requests.filter(r => !searchTerm || r.org.toLowerCase().includes(searchTerm));
+    body = (reqs.length ? `<div class="table-wrap"><table class="resp"><thead><tr><th>Organisation</th><th>Food Needed</th><th>Quantity</th><th>Location</th><th>Date</th><th>Status</th></tr></thead><tbody>
+      ${reqs.map(r => `<tr><td data-label="Organisation"><div class="cell-main">${esc(r.org)}</div></td>
+        <td data-label="Food Needed">${esc(r.foodType)}</td><td data-label="Quantity"><b>${r.quantity}</b> meals</td>
+        <td data-label="Location">${esc(r.location)}</td><td data-label="Date">${fmtDate(r.date)}</td>
+        <td data-label="Status"><span class="badge b-info">Requested</span></td></tr>`).join('')}</tbody></table></div>`
+      : emptyState('doc', 'No donation requests yet', 'Charity organisations can request food donations for people in need.')) +
+      `<div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="btn btn-primary" id="addRequest">${icon('plus', 15)} Request Donation</button></div>`;
+  } else if (charityTab === 'beneficiaries') {
+    body = (DB.beneficiaries.length ? `<div class="two-col">${DB.beneficiaries.map(b => `
+      <div class="stat-mini"><span class="mi tone-blue">${icon('people', 20)}</span><div><b>${esc(b.name)}</b><span>${b.count} people • ${esc(b.location)}</span></div></div>`).join('')}</div>`
+      : emptyState('people', 'No beneficiaries yet', 'Register groups of people supported by your organisation.')) +
+      `<div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="btn btn-primary" id="addBeneficiary">${icon('plus', 15)} Add Beneficiaries</button></div>`;
+  } else {
+    body = (DB.distLocations.length ? `<div class="two-col">${DB.distLocations.map(l => `
+      <div class="stat-mini"><span class="mi tone-teal">${icon('pin', 20)}</span><div><b>${esc(l.name)}</b><span>${esc(l.area)}</span></div></div>`).join('')}</div>`
+      : emptyState('pin', 'No distribution locations yet', 'Add locations where food is distributed to people in need.')) +
+      `<div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="btn btn-primary" id="addLocation">${icon('plus', 15)} Add Location</button></div>`;
+  }
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon('charity', 27)} Charity Organisations</h2><p class="sub">Work together with charity organisations to help people in need.</p></div>
+      <button class="btn btn-primary" id="regOrg">${icon('plus', 17)} Register Organisation</button>
+    </div>
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+      ${kpiMini('Registered Organisations', DB.charities.length, 'charity', 'green')}
+      ${kpiMini('Donations Received', s.receivedCount, 'gift', 'purple')}
+      ${kpiMini('People Supported', s.peopleSupported, 'people', 'blue')}
+      ${kpiMini('Meals Distributed', s.mealsDistributed, 'truck', 'teal')}
+    </div>
+    <div class="tabs">${tabs.map(([id, l]) => `<button class="tab-btn ${charityTab === id ? 'active' : ''}" data-tab="${id}">${l}</button>`).join('')}</div>
+    <div class="card" id="charityBody">${body}</div><div class="card" style="margin-top:16px"><div class="card-head"><h3><span class="ch-ic">${icon('pin',17)}</span>Nearby Restaurants & Hotels</h3><span class="badge b-info">${esc(charityLocation||'Set your governorate in Profile & Settings')}</span></div>${nearby.length?`<div class="two-col">${nearby.slice(0,8).map(p=>`<div class="contact-chip"><span class="ci">${icon(p.type==='Hotel'?'hotel':'restaurant',19)}</span><div><b>${esc(p.name)}</b><span>${p.type} • ${esc(p.location||'')}</span><div style="margin-top:6px">${contactButtons(p.phone)}</div></div></div>`).join('')}</div>`:emptyState('pin','No nearby partners yet','Set your governorate in Settings. Partners in the same governorate appear here automatically.')}</div>
+    <div class="banner" style="margin-top:20px">${icon('leaf', 20)} Together we can end hunger — Less food waste • More food for those in need • A sustainable future</div>`;
+  function kpiMini(label, val, ic, tone) {
+    return `<div class="card kpi"><div class="kpi-top"><span class="kpi-label">${label}</span><span class="kpi-icon tone-${tone}">${icon(ic, 22)}</span></div><div class="kpi-val">${val}</div><div class="kpi-trend">Updates automatically</div></div>`;
+  }
+  $$('#pageContent [data-tab]').forEach(b => b.onclick = () => { charityTab = b.dataset.tab; renderApp(); });
+  $('#regOrg').onclick = () => openModal('Register Charity Organisation', `<form novalidate><div class="form-grid">
+      ${fldIcon('Organisation Name', 'name', 'building', 'text', 'Enter organisation name', 'required')}
+      ${fldIcon('Responsible Person', 'person', 'user', 'text', 'Enter responsible person name', 'required')}
+      ${fldIcon('Phone Number', 'phone', 'phone', 'tel', '+20 10 12345678', 'required')}
+      ${fldIcon('Email Address', 'email', 'mail', 'email', 'org@example.com', 'required')}
+      ${govSelect('Governorate','location',true)}
+      <div class="field"><label>Type</label><select name="type" required><option value="" disabled selected>Select type</option><option>Food Bank</option><option>Orphanage</option><option>Relief Organisation</option><option>Community Kitchen</option><option>Other</option></select></div>
+      <div class="field full" style="grid-column:1/-1"><label>Description</label><textarea name="desc" placeholder="Brief description of the organisation and its mission..."></textarea></div>
+    </div></form>`, {
+    submitLabel: 'Register Organisation',
+    onSubmit: async d => {
+      try { await api('/charities', { method: 'POST', body: d }); }
+      catch (e) {
+        DB.charities.push({ id: uid(), name: d.name, person: d.person, phone: d.phone, email: d.email, location: d.location, type: d.type, desc: d.desc, joined: Date.now() });
+        save(); notify(`Charity organisation registered: ${d.name}`, 'charity');
+      }
+      toast('Organisation registered successfully.'); closeModal(); renderApp();
+    }
+  });
+  $$('#pageContent [data-status]').forEach(b => b.onclick = async () => {
+    const next = b.dataset.next;
+    try {
+      await api('/donations/' + b.dataset.status, { method: 'PATCH', body: { status: next } });
+    } catch (e) {
+      const d = DB.donations.find(x => x.id === b.dataset.status);
+      if (d) { d.status = next; save(); notify(`Donation ${next.toLowerCase()} from ${d.donorName}`, 'truck'); }
+    }
+    toast('Donation marked as ' + next + '.');
+    renderApp();
+  });
+  const ar = $('#addRequest'); if (ar) ar.onclick = () => openModal('Request Donation', `<form novalidate><div class="form-grid">
+    ${fldIcon('Organisation Name', 'org', 'building', 'text', 'Enter organisation name', 'required')}
+    ${selFld('Food Type', 'foodType', FOOD_TYPES, 'Select food type', 'required')}
+    ${fldIcon('Quantity Needed', 'quantity', 'meal', 'number', 'Enter quantity', 'required min="1"')}
+    ${govSelect('Governorate','location',true)}
+    ${fldIcon('Date Needed By', 'date', 'calendar', 'date', '', `required value="${todayISO()}"`)}
+    <div class="field"><label>&nbsp;</label><input disabled placeholder="Request will be broadcast to donors"/></div>
+    </div></form>`, {
+    submitLabel: 'Send Request',
+    onSubmit: d => {
+      DB.requests.push({ id: uid(), org: d.org, foodType: d.foodType, quantity: parseInt(d.quantity) || 0, location: d.location, date: d.date });
+      save(); notify(`Donation request from ${d.org}: ${d.quantity} meals (${d.foodType})`, 'doc');
+      toast('Donation request sent.'); closeModal(); renderApp();
+    }
+  });
+  const ab = $('#addBeneficiary'); if (ab) ab.onclick = () => openModal('Add Beneficiaries', `<form novalidate><div class="form-grid">
+    ${fldIcon('Group / Area Name', 'name', 'people', 'text', 'e.g. Families in Downtown', 'required')}
+    ${fldIcon('Number of People', 'count', 'people', 'number', 'Enter number', 'required min="1"')}
+    ${govSelect('Governorate','location',true)}
+    </div></form>`, {
+    submitLabel: 'Add Beneficiaries',
+    onSubmit: d => {
+      DB.beneficiaries.push({ id: uid(), name: d.name, count: parseInt(d.count) || 0, location: d.location });
+      save(); notify(`New beneficiaries registered: ${d.name} (${d.count} people)`, 'people');
+      toast('Beneficiaries added.'); closeModal(); renderApp();
+    }
+  });
+  const al = $('#addLocation'); if (al) al.onclick = () => openModal('Add Distribution Location', `<form novalidate><div class="form-grid">
+    ${fldIcon('Location Name', 'name', 'building', 'text', 'e.g. Community Center', 'required')}
+    ${fldIcon('Area / Address', 'area', 'pin', 'text', 'Enter area or address', 'required')}
+    </div></form>`, {
+    submitLabel: 'Add Location',
+    onSubmit: d => {
+      DB.distLocations.push({ id: uid(), name: d.name, area: d.area });
+      save(); notify(`New distribution location added: ${d.name}`, 'pin');
+      toast('Distribution location added.'); closeModal(); renderApp();
+    }
+  });
+}
+
+/* ================= ADS & OFFERS CENTER ================= */
+let promoFilter = 'all';
+function pagePromotions() {
+  const today = todayISO();
+  const activeOffers = DB.offers.filter(o => !o.validUntil || o.validUntil >= today);
+  const activeAds = DB.ads.filter(a => a.status !== 'expired' && (!a.endDate || a.endDate >= today));
+  const allItems = [
+    ...activeOffers.map(o => ({kind:'offer', id:o.id, title:o.title, business:o.restaurantName, location:o.location, description:o.description, discount:o.discount, audience:o.audience, validUntil:o.validUntil, featured:!!o.featured})),
+    ...activeAds.map(a => ({kind:'ad', id:a.id, title:a.title || a.business, business:a.business, location:a.governorate || a.location || a.country || 'Egypt', description:a.desc || a.description || '', adType:a.adType, featured:!!a.featured, views:a.views||0, clicks:a.clicks||0, endDate:a.endDate || a.startDate}))
+  ].filter(x => promoFilter === 'all' || x.kind === promoFilter || (promoFilter === 'featured' && x.featured))
+   .filter(x => !searchTerm || [x.title,x.business,x.location,x.description,x.audience,x.adType].join(' ').toLowerCase().includes(searchTerm));
+  const featured = allItems.filter(x=>x.featured);
+  const renderItem = x => `<div class="card" style="position:relative;overflow:hidden">
+    ${x.featured ? '<span class="badge b-active" style="position:absolute;top:14px;right:14px">★ Featured</span>' : ''}
+    <div style="display:flex;gap:13px;align-items:flex-start;padding-right:${x.featured?'78px':'0'}">
+      <span class="mi ${x.kind==='offer'?'tone-green':'tone-orange'}">${icon(x.kind==='offer'?'gift':'megaphone',22)}</span>
+      <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:800">${esc(x.title)}</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:4px">${esc(x.business)} • ${esc(x.location)}</div>
+      <p style="font-size:13px;color:var(--muted);margin:9px 0;line-height:1.55">${esc(x.description || 'Community offer on Zero Hunger.')}</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        ${x.kind==='offer'?`<span class="badge b-active">${x.discount}% OFF</span><span class="badge b-info">${esc(x.audience)}</span><span class="badge">Valid until ${fmtDate(x.validUntil)}</span>`:`<span class="badge b-info">${esc(x.adType || 'Advertisement')}</span><span class="badge">👁 ${x.views} views</span><span class="badge">↗ ${x.clicks} interactions</span>`}
+      </div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:13px"><button class="btn btn-outline btn-sm" data-promo-view="${esc(x.id)}" data-promo-kind="${x.kind}">${icon('eye',14)} View Details</button></div>
+  </div>`;
+  $('#pageContent').innerHTML = `<div class="page-head">
+    <div><h2>${icon('megaphone',27)} Ads & Offers</h2><p class="sub">Discover restaurant offers, hotel advertisements and featured community campaigns in one place.</p></div>
+    <button class="btn btn-primary" id="createPromo">${icon('plus',17)} Create Advertisement</button>
+  </div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+    ${kpiMini('Active Offers', activeOffers.length, 'gift','green')}
+    ${kpiMini('Active Ads', activeAds.length, 'megaphone','orange')}
+    ${kpiMini('Featured', featured.length, 'heart','purple')}
+    ${kpiMini('Total Views', stats().totalAdViews, 'eye','blue')}
+  </div>
+  <div class="tabs"><button class="tab-btn ${promoFilter==='all'?'active':''}" data-pf="all">All</button><button class="tab-btn ${promoFilter==='offer'?'active':''}" data-pf="offer">Restaurant Offers</button><button class="tab-btn ${promoFilter==='ad'?'active':''}" data-pf="ad">Business Ads</button><button class="tab-btn ${promoFilter==='featured'?'active':''}" data-pf="featured">★ Featured</button></div>
+  <div class="card" style="margin-bottom:16px"><div class="card-head"><h3><span class="ch-ic">${icon('search',17)}</span>Find an offer or advertisement</h3><div class="search-wrap"><input id="promoSearch" placeholder="Search business, offer or location..." value="${esc(searchTerm)}"/></div></div></div>
+  <div id="promoGrid" class="two-col">${allItems.length ? allItems.map(renderItem).join('') : emptyState('megaphone','No active ads or offers','Businesses can publish offers and advertisements here.')}</div>
+  <div class="banner" style="margin-top:20px">${icon('leaf',20)} Businesses can promote their services while supporting affordable food access and community initiatives.</div>`;
+  function kpiMini(label,val,ic,tone){return `<div class="card kpi"><div class="kpi-top"><span class="kpi-label">${label}</span><span class="kpi-icon tone-${tone}">${icon(ic,22)}</span></div><div class="kpi-val">${val}</div><div class="kpi-trend">Updates automatically</div></div>`}
+  $$('#pageContent [data-pf]').forEach(b=>b.onclick=()=>{promoFilter=b.dataset.pf;renderApp()});
+  $('#promoSearch').oninput=e=>{searchTerm=e.target.value.toLowerCase();renderApp();const z=$('#promoSearch');if(z){z.focus();z.setSelectionRange(z.value.length,z.value.length)}};
+  $$('#pageContent [data-promo-view]').forEach(b=>b.onclick=()=>{
+    const kind=b.dataset.promoKind, id=b.dataset.promoView;
+    if(kind==='offer'){
+      const o=DB.offers.find(x=>x.id===id); if(!o)return;
+      o.views=(o.views||0)+1; save();
+      openModal(o.title, `<div class="card" style="box-shadow:none;border:0;padding:0"><h3>${esc(o.restaurantName)}</h3><p style="color:var(--muted);line-height:1.7">${esc(o.description||'No description provided.')}</p><div class="two-col"><div class="contact-chip"><span class="ci">${icon('gift',19)}</span><div><b>${o.discount}% OFF</b><span>${esc(o.audience)}</span></div></div><div class="contact-chip"><span class="ci">${icon('pin',19)}</span><div><b>${esc(o.location)}</b><span>Location</span></div></div></div><p style="font-size:12px;color:var(--muted);margin-top:14px">Valid until ${fmtDate(o.validUntil)} • Views: ${o.views}</p></div>`,{submitLabel:'Close',onSubmit:()=>{closeModal()}});
+    } else {
+      const a=DB.ads.find(x=>x.id===id); if(!a)return; a.views=(a.views||0)+1; a.clicks=(a.clicks||0)+1; save();
+      openModal(a.title||a.business, `<div class="card" style="box-shadow:none;border:0;padding:0"><h3>${esc(a.business)}</h3><p style="color:var(--muted);line-height:1.7">${esc(a.desc||a.description||'No description provided.')}</p><div class="two-col"><div class="contact-chip"><span class="ci">${icon('megaphone',19)}</span><div><b>${esc(a.adType||'Advertisement')}</b><span>Ad Type</span></div></div><div class="contact-chip"><span class="ci">${icon('pin',19)}</span><div><b>${esc(a.governorate||a.location||a.country||'Egypt')}</b><span>Location</span></div></div></div><p style="font-size:12px;color:var(--muted);margin-top:14px">Views: ${a.views} • Interactions: ${a.clicks}</p></div>`,{submitLabel:'Close',onSubmit:()=>closeModal()});
+    }
+  });
+  $('#createPromo').onclick=()=>openModal('Create Business Advertisement',`<form novalidate><div class="form-grid">
+    ${selFld('Business Type','businessType',['Restaurant','Hotel'],'Select business type','required')}
+    ${fldIcon('Business Name','business','building','text','Enter business name','required')}
+    ${fldIcon('Advertisement Title','title','megaphone','text','e.g. Weekend Special Offer','required')}
+    ${fldIcon('Discount % (optional)','discount','gift','number','e.g. 30','min="0" max="100"')}
+    ${fldIcon('Phone Number','phone','phone','tel','+20 10 12345678','required')}
+    ${selFld('Advertisement Type','adType',['Banner Ad','Featured Listing','Sponsored Post','Community Campaign'],'Select type','required')}
+    ${govSelect('Governorate / Location','governorate',true)}
+    ${fldIcon('Start Date','startDate','calendar','date','',`required value="${todayISO()}"`)}
+    ${fldIcon('End Date','endDate','calendar','date','',`required`)}
+    <div class="field full" style="grid-column:1/-1"><label>Description</label><textarea name="desc" placeholder="Describe your offer, service or community campaign..." required></textarea></div>
+    <label class="check-row full" style="grid-column:1/-1"><input type="checkbox" name="featured"/> Request Featured placement</label>
+  </div></form>`,{wide:true,submitLabel:'Publish Advertisement',onSubmit: async d=>{
+    try { await api('/ads', { method:'POST', body:d }); toast('Advertisement sent for review.'); }
+    catch(e){
+      const rec={id:uid(),businessType:d.businessType,business:d.business,title:d.title,adType:d.adType,governorate:d.governorate,phone:d.phone||'',discount:parseInt(d.discount)||0,startDate:d.startDate,endDate:d.endDate,desc:d.desc,featured:!!d.featured,status:'pending',views:0,clicks:0,createdAt:Date.now()};
+      DB.ads.unshift(rec); ensurePartner(rec.business,rec.businessType,d.phone||'',rec.governorate||''); save(); toast('Saved locally. Server will review when online.');
+    }
+    closeModal(); renderApp();
+  }});
+}
+
+/* ================= AD HERE ================= */
+function pageAds() {
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon('megaphone', 27)} Ad Here</h2><p class="sub">Support our mission by advertising your business and reaching a wider audience.</p></div>
+      <span class="badge b-active" style="padding:8px 16px">${icon('leaf', 14)} Advertising supports the platform</span>
+    </div>
+    <div class="grid-2" style="grid-template-columns:1.35fr 1fr">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-head"><h3><span class="ch-ic">${icon('megaphone', 17)}</span>Advertisement Information</h3></div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Contact details of the person responsible for the ad.</p>
+          <div class="two-col">
+            <div class="contact-chip"><span class="ci">${icon('user', 19)}</span><div><b>Rawda Mohammed Elsaid</b><span>Full Name — Ad Responsible</span></div></div>
+            <div class="contact-chip"><span class="ci">${icon('phone', 19)}</span><div><b>+20 10 33718037</b><span>Contact Number</span></div></div>
+            <div class="contact-chip"><span class="ci">${icon('pin', 19)}</span><div><b>Kafr El-Sheikh</b><span>Governorate</span></div></div>
+            <div class="contact-chip"><span class="ci">${icon('globe', 19)}</span><div><b>Egypt</b><span>Country</span></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><span class="ch-ic">${icon('doc', 17)}</span>Submit an Advertisement</h3></div>
+          <form id="adForm" novalidate><div class="form-grid">
+            ${fldIcon('Business Name', 'business', 'building', 'text', 'Enter business name', 'required')}
+            ${fldIcon('Owner Name', 'owner', 'user', 'text', 'Enter owner name', 'required')}
+            ${fldIcon('Phone Number', 'phone', 'phone', 'tel', '+20 10 12345678', 'required')}
+            ${govSelect('Governorate','governorate',true)}
+            ${fldIcon('Country', 'country', 'globe', 'text', 'e.g. Egypt', 'required')}
+            ${selFld('Business Type', 'businessType', ['Restaurant', 'Hotel'], 'Select business type', 'required')}
+            ${selFld('Advertisement Type', 'adType', ['Banner Ad', 'Sidebar Ad', 'Featured Listing', 'Sponsored Post', 'Community Campaign'], 'Select type', 'required')}
+            ${fldIcon('Discount % (optional)', 'discount', 'gift', 'number', 'e.g. 30', 'min="0" max="100"')}
+            ${fldIcon('Advertisement Duration', 'duration', 'clock', 'text', 'e.g. 1 month / 3 months', 'required')}
+            <div class="field"><label>Start Date</label><input name="startDate" type="date" value="${todayISO()}" required/></div>
+            <div class="field full" style="grid-column:1/-1"><label>Advertisement Description</label><textarea name="desc" placeholder="Describe your offer or service..." required></textarea></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:6px">
+            <button class="btn btn-primary" type="submit">${icon('send', 15)} Submit Advertisement</button>
+          </div></form>
+        </div>
+      </div>
+      <div>
+        <div class="side-illu" style="margin-bottom:16px">
+          <div class="illu-ic" style="background:linear-gradient(135deg,#0e9488,#0f766e)">${icon('megaphone', 34)}</div>
+          <h3>Advertise With Us</h3>
+          <p>Help spread the word about your business and make a positive impact in your community.</p>
+          <button class="btn btn-primary" id="adGetStarted" style="width:100%">${icon('megaphone', 15)} Get Started</button>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><span class="ch-ic">${icon('heart', 17)}</span>Why Advertise With Us?</h3></div>
+          <div class="adv-cards" style="grid-template-columns:1fr 1fr">
+            <div class="adv-card"><span class="ai">${icon('leaf', 22)}</span><p>Increase your brand awareness</p></div>
+            <div class="adv-card"><span class="ai" style="background:#e8f0fe;color:#3b6fd4">${icon('people', 22)}</span><p>Reach a wider audience</p></div>
+            <div class="adv-card"><span class="ai" style="background:#fde8ec;color:#d43f5b">${icon('heart', 22)}</span><p>Support a noble cause</p></div>
+            <div class="adv-card"><span class="ai" style="background:#fdf0e4;color:#d97706">${icon('globe', 22)}</span><p>Be part of a sustainable future</p></div>
+          </div>
+        </div>
+        <div class="banner" style="margin:16px 0 0">${icon('leaf', 18)} Your advertisement helps support food sharing, reduce waste and feed those in need.</div>
+      </div>
+    </div>`;
+  $('#adForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target; if (!form.reportValidity()) return;
+    const data = {}; $$('#adForm [name]').forEach(el => data[el.name] = el.value.trim());
+    try { await api('/ads', { method:'POST', body:data }); }
+    catch (err) {
+      DB.ads.push(Object.assign({ id: uid(), createdAt: Date.now(), status:'pending' }, data));
+      save(); notify(`New advertisement request from ${data.business} (${data.adType})`, 'megaphone');
+    }
+    toast('Advertisement request submitted for admin review.');
+    form.reset();
+  });
+  $('#adGetStarted').onclick = () => { const f = $('#adForm [name=business]'); if (f) f.focus(); };
+}
+
+/* ================= ADMIN ADS ================= */
+function pageAdminAds() {
+  if (!isAdmin()) { navigate('dashboard'); return; }
+  const ads = DB.ads || [];
+  $('#pageContent').innerHTML = `
+    <div class="page-head"><div><h2>${icon('settings',27)} Admin — Advertisements</h2>
+      <p class="sub">Approve, feature, or remove ads. Views and clicks start at 0 and rise with real use.</p></div></div>
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">All ads</span><span class="kpi-icon tone-orange">${icon('megaphone',22)}</span></div><div class="kpi-val">${ads.length}</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Pending</span><span class="kpi-icon tone-orange">${icon('clock',22)}</span></div><div class="kpi-val">${ads.filter(a=>a.status==='pending').length}</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Active</span><span class="kpi-icon tone-green">${icon('check',22)}</span></div><div class="kpi-val">${ads.filter(a=>a.status==='active').length}</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="kpi-label">Views</span><span class="kpi-icon tone-blue">${icon('eye',22)}</span></div><div class="kpi-val">${ads.reduce((s,a)=>s+(a.views||0),0)}</div></div>
+    </div>
+    <div class="card"><div class="table-wrap"><table class="resp"><thead><tr>
+      <th>Business</th><th>Title</th><th>Type</th><th>Governorate</th><th>Views</th><th>Clicks</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+      ${ads.length ? ads.map(a => `<tr>
+        <td data-label="Business"><div class="cell-main">${esc(a.business)}</div><div class="cell-sub">${esc(a.businessType||'')}</div></td>
+        <td data-label="Title">${esc(a.title||'—')}</td>
+        <td data-label="Type">${esc(a.adType||'—')}</td>
+        <td data-label="Governorate">${esc(a.governorate||a.location||'—')}</td>
+        <td data-label="Views">${a.views||0}</td>
+        <td data-label="Clicks">${a.clicks||0}</td>
+        <td data-label="Status">${statusBadge(a.status||'pending')}</td>
+        <td data-label="Actions"><div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" data-ad="${a.id}" data-act="active">Approve</button>
+          <button class="btn btn-outline btn-sm" data-ad="${a.id}" data-act="featured">${a.featured?'Unfeature':'Feature'}</button>
+          <button class="btn btn-outline btn-sm" data-ad="${a.id}" data-act="expired">Expire</button>
+          <button class="btn btn-danger-soft btn-sm" data-ad="${a.id}" data-act="delete">Delete</button>
+        </div></td></tr>`).join('') : `<tr><td colspan="8">${emptyState('megaphone','No ads yet','Submitted advertisements appear here for review.')}</td></tr>`}
+      </tbody></table></div></div>`;
+  $$('#pageContent [data-ad]').forEach(b => b.onclick = async () => {
+    const id = b.dataset.ad, act = b.dataset.act;
+    try {
+      if (act === 'delete') await api('/ads/' + id, { method: 'DELETE' });
+      else if (act === 'featured') {
+        const ad = ads.find(x => x.id === id);
+        await api('/ads/' + id, { method: 'PATCH', body: { featured: !(ad && ad.featured) } });
+      } else await api('/ads/' + id, { method: 'PATCH', body: { status: act } });
+    } catch (e) {
+      const ad = DB.ads.find(x => x.id === id);
+      if (act === 'delete') DB.ads = DB.ads.filter(x => x.id !== id);
+      else if (ad && act === 'featured') ad.featured = !ad.featured;
+      else if (ad) ad.status = act;
+      save();
+    }
+    renderApp();
+  });
+}
+
+/* ================= NOTIFICATIONS ================= */
+function pageNotifications() {
+  DB.notifications.forEach(n => n.read = true); save(); updateBell();
+  api('/notifications/read', { method: 'PATCH' }).catch(() => {});
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon('bell', 27)} Notifications</h2><p class="sub">Stay updated with the latest news, donations, and platform activities.</p></div>
+      ${DB.notifications.length ? `<button class="btn btn-outline" id="clearNotif">${icon('doc', 14)} Clear All</button>` : ''}
+    </div>
+    <div class="card">
+      ${DB.notifications.length ? DB.notifications.map(n => `
+        <div class="notif-item"><span class="notif-ic tone-green">${icon(n.icon || 'bell', 19)}</span>
+          <div><b>${esc(n.text)}</b><p>Platform activity</p></div>
+          <span class="notif-time">${fmtTimeAgo(n.time)}</span></div>`).join('')
+      : `<div class="empty" style="padding:70px 20px"><div class="eic">${icon('bell', 34)}</div><h4>No new notifications</h4><p>When important actions happen — new donations, accepted donations, registrations or ad requests — notifications will appear here.</p></div>`}
+    </div>`;
+  const c = $('#clearNotif'); if (c) c.onclick = () => { DB.notifications = []; save(); updateBell(); renderApp(); };
+}
+
+/* ================= SETTINGS ================= */
+function pageSettings() {
+  const t = ACCOUNT_TYPES.find(x => x.id === USER.type) || ACCOUNT_TYPES[3];
+  $('#pageContent').innerHTML = `
+    <div class="page-head">
+      <div><h2>${icon('settings', 27)} Settings</h2><p class="sub">Manage your account information and preferences.</p></div>
+    </div>
+    <div class="set-grid">
+      <div>
+        <div class="card profile-hero" style="margin-bottom:16px">
+          <div class="big-avatar" id="setAvatar">${esc((USER.name || 'U').charAt(0).toUpperCase())}</div>
+          <div><h3 style="font-size:18px">${esc(USER.name)}</h3><p style="color:var(--muted);font-size:13px">${esc(t.label)} • Zero Hunger</p></div>
+          <button class="btn btn-outline btn-sm" id="changePic">${icon('eye', 14)} Change Profile Picture</button>
+          <input type="file" id="picInput" accept="image/*" style="display:none"/>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><span class="ch-ic">${icon('settings', 16)}</span>Preferences</h3></div>
+          <div class="pref-row"><div><div class="pl">Dark Mode</div><div class="ps">Toggle the dark theme across the platform</div></div>
+            <label class="switch"><input type="checkbox" id="prefDark" ${DB.theme === 'dark' ? 'checked' : ''}/><span class="track"></span></label></div>
+          <div class="pref-row"><div><div class="pl">Language</div><div class="ps">Choose your preferred language</div></div>
+            <select id="prefLang" style="width:130px;padding:8px 12px"><option>English</option><option>العربية</option></select></div>
+          <div class="pref-row"><div><div class="pl">Email Notifications</div><div class="ps">Receive updates by email</div></div>
+            <label class="switch"><input type="checkbox" id="prefEmail" checked/><span class="track"></span></label></div>
+          <div class="pref-row"><div><div class="pl">Push Notifications</div><div class="ps">Receive in-app notifications</div></div>
+            <label class="switch"><input type="checkbox" id="prefPush" checked/><span class="track"></span></label></div>
+          <div class="pref-row"><div><div class="pl">Demo Data</div><div class="ps">Load a large sample dataset so dashboards, offers and ads look active</div></div>
+            <button class="btn btn-primary btn-sm" type="button" id="loadDemoBtn">Load demo data</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-head"><h3><span class="ch-ic">${icon('user', 16)}</span>Profile</h3><p style="font-size:12.5px;color:var(--muted)">Update your personal information and account details.</p></div>
+          <form id="profileForm" novalidate><div class="form-grid">
+            ${fldIcon('Full Name', 'name', 'user', 'text', 'Enter full name', `required value="${esc(USER.name)}"`)}
+            ${fldIcon('Phone Number', 'phone', 'phone', 'tel', '+20 10 12345678', `value="${esc(USER.phone || '')}"`)}
+            ${fldIcon('Email Address', 'email', 'mail', 'email', 'you@example.com', `value="${esc(USER.email || '')}"`)}
+            ${govSelect('Governorate','location',true)}
+            <div class="field"><label>Account Type</label><select name="type">${ACCOUNT_TYPES.map(x => `<option value="${x.id}" ${x.id === USER.type ? 'selected' : ''}>${x.label}</option>`).join('')}</select></div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+            <button class="btn btn-ghost" type="button" id="profileCancel">Cancel</button>
+            <button class="btn btn-primary" type="submit">${icon('save', 15)} Save Changes</button>
+          </div></form>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><span class="ch-ic">${icon('lock', 16)}</span>Security</h3><p style="font-size:12.5px;color:var(--muted)">Change your password to keep your account secure.</p></div>
+          <form id="pwdForm" novalidate><div class="form-grid" style="grid-template-columns:1fr 1fr">
+            ${fldIcon('New Password', 'pwd', 'lock', 'password', 'Enter new password', 'required minlength="6"')}
+            ${fldIcon('Confirm Password', 'pwd2', 'lock', 'password', 'Repeat new password', 'required')}
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+            <button class="btn btn-ghost" type="button" id="pwdCancel">Cancel</button>
+            <button class="btn btn-primary" type="submit">${icon('lock', 14)} Change Password</button>
+          </div></form>
+        </div>
+      </div>
+    </div>`;
+  $('#prefDark').onchange = e => { DB.theme = e.target.checked ? 'dark' : 'light'; save(); applyTheme(); api('/theme',{method:'POST',body:{theme:DB.theme}}).catch(()=>{}); };
+  const demoBtn = $('#loadDemoBtn');
+  if (demoBtn) demoBtn.onclick = () => { seedZeroHunger(true); save(); enterApp(); toast('Demo data loaded.'); };
+  const profLoc=$('#profileForm [name=location]'); if(profLoc && USER.location){ [...profLoc.options].forEach(o=>{if(normGov(o.value)===normGov(USER.location)) o.selected=true;}); }
+  $('#prefLang').value = localStorage.getItem('zh_lang') || 'English';
+  $('#prefLang').onchange = e => changeLanguage(e.target.value);
+  $('#profileForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target; if (!f.reportValidity()) return;
+    const g = k => f.querySelector(`[name=${k}]`).value.trim();
+    const payload = { name: g('name'), phone: g('phone'), email: g('email'), location: g('location'), type: g('type') };
+    try { await api('/me', { method: 'PATCH', body: payload }); }
+    catch (err) {
+      USER = Object.assign({}, USER, payload);
+      if(USER.type==='restaurant') ensurePartner(USER.name,'Restaurant',USER.phone,USER.location);
+      if(USER.type==='hotel') ensurePartner(USER.name,'Hotel',USER.phone,USER.location);
+      try { localStorage.setItem(LS_USER, JSON.stringify(USER)); } catch (err2) {}
+    }
+    enterApp(); toast('Profile updated successfully.');
+  });
+  $('#profileCancel').onclick = () => renderApp();
+  $('#pwdForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target; if (!f.reportValidity()) return;
+    const p1 = f.querySelector('[name=pwd]').value, p2 = f.querySelector('[name=pwd2]').value;
+    if (p1 !== p2) { toast('Passwords do not match.', 'err'); return; }
+    try { await api('/me', { method: 'PATCH', body: { password: p1 } }); } catch (err) {}
+    f.reset(); toast('Password changed successfully.');
+  });
+  $('#pwdCancel').onclick = e => e.target.closest('form').reset();
+  const picBtn = $('#changePic'), picInput = $('#picInput');
+  picBtn.onclick = () => picInput.click();
+  picInput.onchange = () => {
+    const file = picInput.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      $('#setAvatar').innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover"/>`;
+      $('#tbAvatar').innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover"/>`;
+      USER.avatar = ev.target.result;
+      api('/me', { method: 'PATCH', body: { avatar: ev.target.result } }).catch(() => {});
+      try { localStorage.setItem(LS_USER, JSON.stringify(USER)); } catch (err) { toast('Image too large to store locally.', 'err'); }
+      toast('Profile picture updated.');
+    };
+    reader.readAsDataURL(file);
+  };
+}
+
+/* ---------- full bilingual UI ---------- */
+const LANG_AR = {
+  'Zero Hunger — Food Sharing Platform':'Zero Hunger — منصة مشاركة الطعام',
+  'Food Sharing Platform':'منصة مشاركة الطعام',
+  'Together, we can end hunger.':'معًا يمكننا القضاء على الجوع.',
+  'Connect restaurants, hotels, donors and charity organisations through offers, partnerships and food donations to support communities.':'اربط المطاعم والفنادق والمتبرعين والجمعيات الخيرية من خلال العروض والشراكات والتبرعات الغذائية لدعم المجتمع.',
+  'Publish offers or share food through the platform':'انشر العروض أو شارك الطعام من خلال المنصة',
+  'Help charities reach people in need':'ساعد الجمعيات الخيرية على الوصول إلى المحتاجين',
+  'Reduce waste, build a sustainable future':'قلل الهدر وابنِ مستقبلًا مستدامًا',
+  'Welcome back':'مرحبًا بعودتك',
+  'Choose your account type and sign in to continue.':'اختر نوع حسابك وسجّل الدخول للمتابعة.',
+  'Login':'تسجيل الدخول','Register':'إنشاء حساب','Logout':'تسجيل الخروج',
+  'Profile & Settings':'الملف الشخصي والإعدادات','Settings':'الإعدادات',
+  'Dashboard':'لوحة التحكم','Hotels':'الفنادق','Restaurants':'المطاعم',
+  'Charity Organisation':'الجمعية الخيرية','Charity Organisations':'الجمعيات الخيرية',
+  'Donate':'التبرع','AD Here':'الإعلانات','Notifications':'الإشعارات',
+  'Make a Difference!':'اصنع فرقًا!','Share food, reduce waste, help people in need.':'شارك الطعام، قلل الهدر، وساعد المحتاجين.',
+  'User':'مستخدم','Donor':'متبرع','Restaurant':'مطعم','Hotel':'فندق',
+  'Register here':'سجّل هنا','Login here':'سجّل الدخول هنا','Create Account':'إنشاء حساب',
+  'Register as':'التسجيل كـ','Welcome back, Restaurant':'مرحبًا بعودتك، مطعم','Welcome back, Hotel':'مرحبًا بعودتك، فندق','Welcome back, Charity Organisation':'مرحبًا بعودتك، جمعية خيرية','Welcome back, Donor':'مرحبًا بعودتك، متبرع',
+  'Organisation Name':'اسم الجمعية','Full Name':'الاسم الكامل','Phone Number':'رقم الهاتف','Email Address':'البريد الإلكتروني',
+  'Location':'الموقع','Password':'كلمة المرور','Confirm Password':'تأكيد كلمة المرور',
+  'Enter organisation name':'أدخل اسم الجمعية','Enter your full name':'أدخل اسمك الكامل','Enter your password':'أدخل كلمة المرور','Repeat your password':'أعد إدخال كلمة المرور',
+  'City, Governorate':'المدينة، المحافظة','Choose your account type':'اختر نوع حسابك',
+  'MAIN MENU':'القائمة الرئيسية','OTHER':'أخرى',
+  'Search donations, restaurants, locations...':'ابحث عن التبرعات والمطاعم والمواقع...',
+  'Search':'بحث','Cancel':'إلغاء','Close':'إغلاق','Submit':'إرسال','Save Changes':'حفظ التغييرات',
+  'Dashboard 1 — Donation Leaders':'لوحة التحكم 1 — المتصدرون في التبرعات',
+  'Restaurants + Hotels + Individual Donors':'المطاعم + الفنادق + المتبرعون الأفراد',
+  'Who has the highest number of donations and meals shared.':'من لديه أكبر عدد من التبرعات والوجبات التي تمت مشاركتها.',
+  'Rank':'الترتيب','Contributor':'المساهم','Donations':'التبرعات','Meals':'الوجبات','Governorate':'المحافظة',
+  'Donation by Governorate':'التبرعات حسب المحافظة','27 Governorates':'27 محافظة','All governorates':'كل المحافظات','All Governorates':'كل المحافظات',
+  'Top Governorates':'أعلى المحافظات','No location data':'لا توجد بيانات مواقع','Add a governorate to donations to start the ranking.':'أضف محافظة إلى التبرعات لبدء الترتيب.',
+  'Dashboard 2 — Best Offers':'لوحة التحكم 2 — أفضل العروض','Highest discount first':'أعلى خصم أولًا',
+  'Restaurant meal discounts and hotel night / stay offers are ranked by the strongest discount. Phone numbers are shown so charities and users can call directly.':'يتم ترتيب خصومات وجبات المطاعم وعروض الليالي والإقامة في الفنادق حسب أعلى خصم. تظهر أرقام الهاتف لتتمكن الجمعيات والمستخدمون من التواصل مباشرة.',
+  'Offer':'العرض','Discount':'الخصم','Highest discount':'أعلى خصم','Best Offers':'أفضل العروض',
+  'Donation Trends':'اتجاهات التبرعات','Last 6 Months':'آخر 6 أشهر','Last 12 Months':'آخر 12 شهرًا',
+  'Food Type Distribution':'توزيع أنواع الطعام','Recent Donations':'أحدث التبرعات','View All':'عرض الكل',
+  'No donation data yet — charts update as donations arrive.':'لا توجد بيانات تبرعات بعد — يتم تحديث الرسوم البيانية مع وصول التبرعات.',
+  'No data yet.':'لا توجد بيانات بعد.','No hotel or individual donations yet.':'لا توجد تبرعات من الفنادق أو المتبرعين الأفراد بعد.',
+  'Monthly statistics appear after your first donation.':'تظهر الإحصائيات الشهرية بعد أول تبرع لك.',
+  'Restaurants & Hotels':'المطاعم والفنادق','Food Type':'نوع الطعام','Quantity':'الكمية','Donation Date':'تاريخ التبرع','Expiry Time':'وقت الانتهاء','Status':'الحالة',
+  'Pending':'قيد الانتظار','Received':'تم الاستلام','Requested':'تم الطلب','Active':'نشط','Expired':'منتهي',
+  'Total Meals Shared':'إجمالي الوجبات المشتركة','People Helped':'الأشخاص الذين تمت مساعدتهم','Active Restaurants':'المطاعم النشطة','Active Hotels':'الفنادق النشطة',
+  'Charity Organisations':'الجمعيات الخيرية','Total Donations':'إجمالي التبرعات','Active Offers':'العروض النشطة',
+  'Updates with every donation':'يتحدث مع كل تبرع','Based on meals shared':'بناءً على الوجبات المشتركة','Registered restaurant partners':'المطاعم الشريكة المسجلة','Registered hotel partners':'الفنادق الشريكة المسجلة','Registered organisations':'الجمعيات المسجلة','All submitted donations':'جميع التبرعات المُرسلة','Current business offers':'عروض الأنشطة الحالية',
+  'Updates automatically':'يتم التحديث تلقائيًا','One HTML file':'ملف HTML واحد','All types':'كل الأنواع','Restaurants':'المطاعم','Hotels':'الفنادق','Donors':'المتبرعون',
+  'Featured placements':'الإعلانات المميزة','Premium':'مميز','Featured':'مميز','★ Featured':'★ مميز',
+  'Ads & Offers':'الإعلانات والعروض','Discover restaurant offers, hotel advertisements and featured community campaigns in one place.':'اكتشف عروض المطاعم وإعلانات الفنادق والحملات المجتمعية المميزة في مكان واحد.',
+  'Create Advertisement':'إنشاء إعلان','Create Business Advertisement':'إنشاء إعلان تجاري','Advertisement Information':'معلومات الإعلان','Contact details of the person responsible for the ad.':'بيانات التواصل مع الشخص المسؤول عن الإعلان.',
+  'Submit an Advertisement':'إرسال إعلان','Start Date':'تاريخ البدء','Advertisement Description':'وصف الإعلان','Submit Advertisement':'إرسال الإعلان','Ad Type':'نوع الإعلان','Advertisement':'إعلان عادي',
+  'Business':'النشاط','Title':'العنوان','Type':'النوع','Views':'المشاهدات','Clicks':'النقرات','Actions':'الإجراءات',
+  'Approve':'موافقة','Unfeature':'إلغاء التمييز','Feature':'تمييز','Expire':'إنهاء','Delete':'حذف','All ads':'كل الإعلانات',
+  'No ads yet':'لا توجد إعلانات بعد','Submitted advertisements appear here for review.':'ستظهر الإعلانات المُرسلة هنا للمراجعة.',
+  'Find an offer or advertisement':'ابحث عن عرض أو إعلان','Restaurant Offers':'عروض المطاعم','Business Ads':'إعلانات الأنشطة','All':'الكل',
+  'View Details':'عرض التفاصيل','Valid until':'صالح حتى','interactions':'تفاعلات','views':'مشاهدات',
+  'Businesses can publish offers and advertisements here.':'يمكن للأنشطة التجارية نشر العروض والإعلانات هنا.',
+  'Businesses can promote their services while supporting affordable food access and community initiatives.':'يمكن للأنشطة التجارية الترويج لخدماتها مع دعم الوصول إلى الطعام بأسعار مناسبة والمبادرات المجتمعية.',
+  'Restaurants can support communities through discounts and partnerships — donation is optional.':'يمكن للمطاعم دعم المجتمع من خلال الخصومات والشراكات — والتبرع اختياري.',
+  'Restaurant Name':'اسم المطعم','Hotel Name':'اسم الفندق','Offer Title':'عنوان العرض','Discount %':'نسبة الخصم %','Audience':'الفئة المستهدفة','Regular Customers':'العملاء العاديون','Charity Organisations':'الجمعيات الخيرية','Both':'الجميع','Valid Until':'صالح حتى','Description':'الوصف',
+  'Add Offer':'إضافة عرض','Publish Offer':'نشر العرض','Search restaurant offers':'ابحث عن عروض المطاعم','Registered Restaurants':'المطاعم المسجلة','Charity Offers':'عروض الجمعيات',
+  'Donate Food':'التبرع بالطعام','Add Food Donation':'إضافة تبرع غذائي','Submit Donation':'إرسال التبرع','Enter Restaurant Donation':'إدخال تبرع مطعم','Enter Hotel Donation':'إدخال تبرع فندق',
+  'Food Type':'نوع الطعام','Meals/Entrees':'وجبات / أطباق رئيسية','Bakery':'مخبوزات','Fruits & Vegetables':'فواكه وخضروات','Beverages':'مشروبات','Others':'أخرى',
+  'Quantity of Meals':'عدد الوجبات','Donation Time':'وقت التبرع','Expiry Time':'وقت الانتهاء','Enter quantity':'أدخل الكمية','Enter location':'أدخل الموقع','Notes (Optional)':'ملاحظات (اختياري)','Any extra information about the food...':'أي معلومات إضافية عن الطعام...',
+  'Charity Organisations':'الجمعيات الخيرية','Work together with charity organisations to help people in need.':'اعمل مع الجمعيات الخيرية لمساعدة المحتاجين.','Register Organisation':'تسجيل جمعية','Request Donation':'طلب تبرع','Add Beneficiaries':'إضافة مستفيدين','Add Distribution Location':'إضافة موقع توزيع',
+  'Nearby Restaurants & Hotels':'أقرب المطاعم والفنادق','Set your governorate in Profile & Settings':'حدد محافظتك من الملف الشخصي والإعدادات','No nearby partners yet':'لا توجد جهات شريكة قريبة بعد','Set your governorate in Settings. Partners in the same governorate appear here automatically.':'حدد محافظتك من الإعدادات. ستظهر الجهات الشريكة في نفس المحافظة تلقائيًا.',
+  'Food Bank':'بنك طعام','Orphanage':'دار أيتام','Relief Organisation':'منظمة إغاثية','Community Kitchen':'مطبخ مجتمعي','Other':'أخرى',
+  'Notifications':'الإشعارات','Stay updated with the latest news, donations, and platform activities.':'ابقَ على اطلاع بآخر الأخبار والتبرعات وأنشطة المنصة.','Clear All':'مسح الكل','Platform activity':'نشاط المنصة','No new notifications':'لا توجد إشعارات جديدة','When important actions happen — new donations, accepted donations, registrations or ad requests — notifications will appear here.':'عند حدوث إجراءات مهمة — مثل التبرعات الجديدة أو قبول التبرعات أو التسجيلات أو طلبات الإعلانات — ستظهر الإشعارات هنا.',
+  'Manage your account information and preferences.':'إدارة معلومات حسابك وتفضيلاتك.','Change Profile Picture':'تغيير صورة الملف الشخصي','Preferences':'التفضيلات','Dark Mode':'الوضع الداكن','Toggle the dark theme across the platform':'تفعيل الوضع الداكن في جميع أنحاء المنصة','Language':'اللغة','Choose your preferred language':'اختر لغتك المفضلة','English':'الإنجليزية','Arabic':'العربية','العربية':'العربية','Email Notifications':'إشعارات البريد الإلكتروني','Receive updates by email':'استقبل التحديثات عبر البريد الإلكتروني','Push Notifications':'الإشعارات الفورية','Receive in-app notifications':'استقبل الإشعارات داخل التطبيق','Profile':'الملف الشخصي','Update your personal information and account details.':'حدّث معلوماتك الشخصية وبيانات حسابك.','Account Type':'نوع الحساب','Security':'الأمان','Change your password to keep your account secure.':'غيّر كلمة المرور للحفاظ على أمان حسابك.','Change Password':'تغيير كلمة المرور',
+  'Together we can end hunger — Less food waste • More food for those in need • A sustainable future':'معًا يمكننا القضاء على الجوع — هدر أقل للطعام • طعام أكثر للمحتاجين • مستقبل مستدام',
+  'Rankings are calculated from submitted donations and published offers. No fixed fake leaderboard numbers.':'يتم حساب الترتيبات من التبرعات المُرسلة والعروض المنشورة. لا توجد أرقام ثابتة أو وهمية في لوحة المتصدرين.',
+  'Advertisement supports the platform':'الإعلان يدعم المنصة','Advertising supports the platform':'الإعلانات تدعم المنصة','Advertise With Us':'أعلن معنا','Get Started':'ابدأ الآن','Why Advertise With Us?':'لماذا تعلن معنا؟','Increase your brand awareness':'زيادة الوعي بعلامتك التجارية','Reach a wider audience':'الوصول إلى جمهور أكبر','Support a noble cause':'دعم قضية نبيلة','Be part of a sustainable future':'كن جزءًا من مستقبل مستدام',
+  'Help spread the word about your business and make a positive impact in your community.':'ساعد في نشر نشاطك التجاري واصنع تأثيرًا إيجابيًا في مجتمعك.','Your advertisement helps support food sharing, reduce waste and feed those in need.':'إعلانك يساعد على دعم مشاركة الطعام وتقليل الهدر وإطعام المحتاجين.',
+  'Approve, feature, or remove ads. Views and clicks start at 0 and rise with real use.':'وافق على الإعلانات أو ميّزها أو احذفها. تبدأ المشاهدات والتفاعلات من 0 وتزداد مع الاستخدام الحقيقي.',
+  'Total':'الإجمالي','Current':'الحالي','Donation':'تبرع','Donations':'التبرعات','Donation ranking':'ترتيب التبرعات',
+  'No donors yet':'لا يوجد متبرعون بعد','Donation rankings appear automatically when restaurants, hotels or donors submit food.':'يظهر ترتيب المتبرعين تلقائيًا عند إرسال المطاعم أو الفنادق أو المتبرعين للطعام.',
+  'No offers yet':'لا توجد عروض بعد','The strongest discounts appear here after restaurants and hotels publish offers.':'تظهر أقوى الخصومات هنا بعد نشر المطاعم والفنادق لعروضهم.',
+  'meals':'وجبات','Restaurant meal':'وجبة مطعم','Hotel night / stay':'ليلة / إقامة فندقية',
+  'Contact Number':'رقم التواصل','Country':'الدولة','Egypt':'مصر','Photo of the food (optional)':'صورة الطعام (اختياري)','No description provided.':'لم يتم تقديم وصف.','Community offer on Zero Hunger.':'عرض مجتمعي على Zero Hunger.',
+  'All governorates':'كل المحافظات','Select governorate':'اختر المحافظة','No donation data yet':'لا توجد بيانات تبرعات بعد','No donation data':'لا توجد بيانات تبرعات','No data yet':'لا توجد بيانات بعد',
+  'Welcome back!':'مرحبًا بعودتك!','Make a Difference!':'اصنع فرقًا!','Request':'طلب','Save':'حفظ','Edit':'تعديل','Call':'اتصال','Contact':'تواصل',
+  'Donation submitted successfully.':'تم إرسال التبرع بنجاح.','Offer published successfully.':'تم نشر العرض بنجاح.','Advertisement submitted successfully.':'تم إرسال الإعلان بنجاح.',
+  'Password does not match.':'كلمة المرور غير متطابقة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.'
+};
+function applyLanguage(){
+  const ar=(localStorage.getItem('zh_lang')||'English')==='العربية';
+  document.documentElement.lang=ar?'ar':'en';
+  document.documentElement.dir=ar?'rtl':'ltr';
+  document.body.classList.toggle('rtl',ar);
+  document.title=ar?'Zero Hunger — منصة مشاركة الطعام':'Zero Hunger — Food Sharing Platform';
+
+  // Preserve the original English text once, then translate every visible text node.
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    const parent=node.parentElement;
+    if(!parent || ['SCRIPT','STYLE'].includes(parent.tagName)) return;
+    if(node.nodeValue.trim()==='') return;
+    if(!node.dataset.en) node.dataset.en=node.nodeValue;
+    const original=node.dataset.en.trim();
+    if(ar){
+      if(LANG_AR[original]) node.nodeValue=node.nodeValue.replace(original,LANG_AR[original]);
+    }else{
+      node.nodeValue=node.dataset.en;
+    }
+  });
+
+  // Translate placeholders and accessibility labels too.
+  $$('[placeholder]').forEach(el=>{
+    if(!el.dataset.enPlaceholder) el.dataset.enPlaceholder=el.getAttribute('placeholder')||'';
+    const v=el.dataset.enPlaceholder;
+    el.setAttribute('placeholder', ar ? (LANG_AR[v]||v) : v);
+  });
+  $$('[aria-label]').forEach(el=>{
+    if(!el.dataset.enAria) el.dataset.enAria=el.getAttribute('aria-label')||'';
+    const v=el.dataset.enAria;
+    el.setAttribute('aria-label', ar ? (LANG_AR[v]||v) : v);
+  });
+  const gs=$('#globalSearch'); if(gs) gs.placeholder=ar?'ابحث عن التبرعات والمطاعم والمواقع...':'Search donations, restaurants, locations...';
+  const pref=$('#prefLang'); if(pref) pref.value=ar?'العربية':'English';
+}
+
+// Re-render dynamic pages whenever the language changes so newly generated content is translated too.
+function changeLanguage(value){
+  localStorage.setItem('zh_lang',value);
+  if(USER){ renderTypeGrid(); renderAuthFields(); renderApp(); }
+  else { renderTypeGrid(); renderAuthFields(); }
+  applyLanguage();
+}
+
+/* ---------- avatar restore + init ---------- */
+function restoreAvatar() {
+  if (USER && USER.avatar) {
+    $('#tbAvatar').innerHTML = `<img src="${USER.avatar}" style="width:100%;height:100%;object-fit:cover"/>`;
+  }
+}
+applyTheme();
+renderTypeGrid(); renderAuthFields();
+applyLanguage();
+if (USER && TOKEN) { enterApp(); restoreAvatar(); }
+else if (USER && !TOKEN) { USER = null; }
+</script>
+
+</body>
+</html>
